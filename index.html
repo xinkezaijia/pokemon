@@ -3919,7 +3919,7 @@ setup.initGameData = function () {
 		'rest_visitor_poke',
 		'rest_visitor',
 		[
-			'牙牙', '融食兽', '三蜜蜂', '黏黏宝', '图图犬', '奇洛栗鼠',
+			'牙牙', '溶食兽', '三蜜蜂', '黏黏宝', '图图犬', '奇洛栗鼠',
 			'木木枭', '炎兔儿', '魔尼尼', '藤藤蛇', '巨锻匠'
 		],
 		[],
@@ -3930,7 +3930,7 @@ setup.initGameData = function () {
 
 	setup.restAreaVisitorRules = {
 		'牙牙': { requireItem: 'deco_moto_model', attract: '摩托车模型' },
-		'融食兽': { requireItem: 'mat_berry', attract: '树果' },
+		'溶食兽': { requireItem: 'mat_berry', attract: '树果' },
 		'三蜜蜂': { requireItem: 'mat_berry', attract: '树果' },
 		'黏黏宝': { requireCredits: 1000, attract: '学分' },
 		'图图犬': { requireCredits: 1000, attract: '学分' },
@@ -5068,9 +5068,9 @@ setup.initGameData = function () {
 
 		{ cats: ['fruit', 'fruit', 'seasoning'], heat: 'medium', name: '浆果派', staminaRestore: 20, quality: 'advanced', desc: '香甜酥脆的外皮裹着满满的果肉，面包烤的非常到位，每一口都是幸福的味道。' },
 		{ cats: ['meat', 'seafood', 'veg'], heat: 'high', name: '海陆火锅', staminaRestore: 25, quality: 'advanced', desc: '大火咕嘟咕嘟煮出来的火锅，什么东西都塞在了里面，什么东西都……' },
-		{ cats: ['seafood', 'seafood', 'seasoning'], heat: 'low', name: '海鲜清汤', staminaRestore: 15, quality: 'advanced', special: 'nextSalvageBoost', desc: '小火慢炖的海鲜清汤，感觉喝完运气都变好了呢。' },
-		{ cats: ['veg', 'seasoning', 'seasoning'], heat: 'low', name: '草药蘑菇汤', staminaRestore: 8, quality: 'advanced', special: 'healPartnerStatus', desc: '用蜂蜜慢慢熬出蘑菇的其他buff，虽然不知道会怎么样，但是暖暖的很安心。' },
-		{ cats: ['staple', 'meat', 'seasoning'], heat: 'high', name: '能量汉堡', staminaRestore: 20, quality: 'advanced', special: 'nextExploreHalfCost', desc: '巨无霸汉堡，算是汉堡吧……吃完感觉能跑一整天。' },
+		{ cats: ['seafood', 'seafood', 'seasoning'], heat: 'low', name: '海鲜清汤', staminaRestore: 15, quality: 'advanced', desc: '小火慢炖的海鲜清汤，真的很鲜美呀……要是有更多海鲜种类就更好了。' },
+		{ cats: ['veg', 'seasoning', 'seasoning'], heat: 'low', name: '草药蘑菇汤', staminaRestore: 8, quality: 'advanced', desc: '用一点点蜂蜜慢慢熬出这种黑蘑菇的内味，虽然很臭但是暖暖的很安心哟。' },
+		{ cats: ['staple', 'meat', 'seasoning'], heat: 'high', name: '能量汉堡', staminaRestore: 20, quality: 'advanced', desc: '巨无霸汉堡，吃完感觉能跑一整天。' },
 		{ cats: ['meat', 'meat', 'seasoning'], heat: 'medium', name: '蜜汁肉干', staminaRestore: 15, quality: 'advanced', special: 'grantMeatJerky', desc: '蜂蜜腌制后再慢慢烤成肉干，方便携带，饿了就啃一口。' },
 		{ cats: ['seafood', 'staple', 'seasoning'], heat: 'high', name: '海鲜炒饭', staminaRestore: 18, quality: 'advanced', desc: '大火爆炒切成一小块一小块的面包丁再配上海带丝，粒粒分明香气四溢。只能靠这样模拟米饭了……' },
 		{ cats: ['veg', 'veg', 'veg'], heat: 'medium', name: '三菇荟萃', staminaRestore: 10, quality: 'advanced', special: 'tempStaminaCap3', desc: '三种蘑菇的盛宴，吃完感觉浑身充满劲儿。天上似乎有皮卡丘在飘呢……' },
@@ -5319,8 +5319,15 @@ setup.initGameData = function () {
 				setup.grantItem('food_meat_jerky', 3);
 				break;
 			case 'tempStaminaCap3':
-				v._cookingBuffs.tempStaminaCap3 = true;
-				v.tiliMax += 3;
+				if (!v._cookingBuffs) {
+					v._cookingBuffs = {};
+				}
+				var nowTs = Date.now();
+				var expireTs = v._cookingBuffs.tempStaminaCap3Expire || 0;
+				if (expireTs <= nowTs) {
+					v.tiliMax += 3;
+				}
+				v._cookingBuffs.tempStaminaCap3Expire = nowTs + 24 * 60 * 60 * 1000;
 				break;
 			case 'nextCaptureBoost':
 				v._cookingBuffs.nextCaptureBoost = true;
@@ -5783,8 +5790,8 @@ setup.initGameData = function () {
 	};
 
 	setup.captureRates = {
-		jinlinqiu: { normal: 4, shiny: 3 },
-		chaojiqiu: { normal: 7, shiny: 6 }
+		jinlinqiu: { normal: 3, shiny: 1 },
+		chaojiqiu: { normal: 6, shiny: 3 }
 	};
 
 	setup.registerDishItems();
@@ -8597,6 +8604,10 @@ setup.migrateSaveData = function () {
 		v.mysteryEggHatchReady = true;
 	}
 	setup.normalizeMysteryEggsInBag();
+	if (v._cookingBuffs && v._cookingBuffs.tempStaminaCap3Expire && v._cookingBuffs.tempStaminaCap3Expire <= Date.now()) {
+		v.tiliMax = Math.max(10, v.tiliMax - 3);
+		v._cookingBuffs.tempStaminaCap3Expire = 0;
+	}
 	if (v.ch3ExploreDone == null) {
 		v.ch3ExploreDone = false;
 	}
@@ -11521,6 +11532,18 @@ postrender['weeklyTaskToast'] = function () {
 	}
 };
 </script><tw-passagedata pid="1" name="声明" tags="" position="1900,75" size="100,100">声明:
+现在版本为v1.2版本
+
+v1.2版本
+更新：修复了食谱食物重复加体力上限的bug
+修复了溶食兽的错别字
+调整了精灵球的捕捉概率
+
+v1.1版本
+更新：修复了树果只能看不能吃的bug
+
+
+
 
 首先感谢参与企划游玩本游戏！
 ⚠️代码为ai辅助调整生成。游戏采用twine方糖制作
