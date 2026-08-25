@@ -1030,6 +1030,13 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     letter-spacing: 0.08em;
 }
 
+.exchange-count {
+    margin: 0.3em 0 0;
+    font-size: 0.85em;
+    color: #1e3a5f;
+    font-weight: 600;
+}
+
 .chapter-hub-notice {
     margin: 0 0 1em;
     padding: 10px 14px;
@@ -8202,6 +8209,7 @@ setup.completePendingExchange = function () {
 		v.exchangeClaimed[id] = true;
 	}
 	setup.gainCredits(credits);
+	v.exchangeCount = (v.exchangeCount || 0) + 1;
 	v.pendingExchangeCredits = 0;
 	v.pendingExchangeId = '';
 	v.pendingExchangeKind = '';
@@ -11556,6 +11564,7 @@ v1.3版本
 休息区新增四位宝可梦（休息区宝可梦不能重复捕捉）
 第一章新增3位宝可梦，第二章新增2位宝可梦
 尝试着修复了学分回退的问题...但是电脑我测试一直没问题所以不知道修复的成功率orz
+新增了学分商店统计次数功能，在金色的兑换学分几个字下面，只会从更新后开始统计次数，之前的旧档不会统计进去。
 
 v1.2版本
 更新：修复了食谱食物重复加体力上限的bug
@@ -12208,6 +12217,7 @@ v1.1版本
 
 &lt;header class=&quot;chapter-page-header&quot;&gt;
 &lt;h1 class=&quot;chapter-page-title&quot;&gt;兑换学分&lt;/h1&gt;
+&lt;div class=&quot;exchange-count&quot;&gt;已兑换 &lt;&lt;print $exchangeCount || 0&gt;&gt; 次&lt;/div&gt;
 &lt;/header&gt;
 
 &lt;div class=&quot;chapter-page-panel&quot;&gt;
