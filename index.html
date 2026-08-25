@@ -3779,7 +3779,7 @@ setup.initGameData = function () {
 			'蚊香蝌蚪', '呆呆兽', '大舌贝', '蛋蛋', '卷卷耳', '泳圈鼬', '乌波', '妙喵', '电飞鼠',
 			'小拉达', '阿泊怪', '喇叭芽', '小磁怪', '菊叶草', '尾立', '大尾立', '咕咕',
 			'皮宝宝', '毽子棉', '芭瓢虫', '溜溜糖球', '草苗龟', '木守宫', '三蜜蜂',
-			'毛辫羊', '新叶喵'
+			'毛辫羊', '新叶喵', '稚山雀', '啃果虫', '虫宝包'
 		],
 		[
 			'巴大蝶', '大针蜂', '皮卡丘', '皮皮', '六尾', '胖丁', '可达鸭', '卡蒂狗',
@@ -3809,7 +3809,7 @@ setup.initGameData = function () {
 			'幼基拉斯', '小卡比兽', '萌虻', '火狐狸', '穿山鼠', '地鼠', '卡拉卡拉', '乌波（地区形态）',
 			'小山猪', '小小象', '呆火驼', '圆陆鲨', '黑眼鳄', '沙丘娃', '卡蒂狗（地区形态）', '火球鼠',
 			'火稚鸡', '爆香猴', '小狮狮', '呆火鳄', '无畏小子', '滑滑小子', '功夫鼬', '小磁怪', '吞食兽',
-			'土龙弟弟', '长毛猪', '蘑蘑菇'
+			'土龙弟弟', '长毛猪', '蘑蘑菇', '燃烧虫', '强颚鸡母虫'
 		],
 		[
 			'菊石兽', '卡比兽', '长尾火狐', '嘎啦嘎啦（地区形态）', '火伊布', '幕下力士', '利欧路',
@@ -3920,7 +3920,8 @@ setup.initGameData = function () {
 		'rest_visitor',
 		[
 			'牙牙', '溶食兽', '三蜜蜂', '黏黏宝', '图图犬', '奇洛栗鼠',
-			'木木枭', '炎兔儿', '魔尼尼', '藤藤蛇', '巨锻匠'
+			'木木枭', '炎兔儿', '魔尼尼', '藤藤蛇', '巨锻匠',
+			'四季鹿', '破破袋', '天然雀', '兰螳花'
 		],
 		[],
 		[]
@@ -3939,7 +3940,11 @@ setup.initGameData = function () {
 		'炎兔儿': { attract: '小窝' },
 		'魔尼尼': { attract: '小窝' },
 		'藤藤蛇': { attract: '小窝' },
-		'巨锻匠': { requireItem: 'mat_pillar', attract: '柱子' }
+		'巨锻匠': { requireItem: 'mat_pillar', attract: '柱子' },
+		'四季鹿': { requireRestLevel: 2, attract: '舒适的休息区' },
+		'破破袋': { requireItem: 'deco_gold_bin', attract: '金色垃圾桶' },
+		'天然雀': { requireItem: 'deco_signboard', attract: '告示牌' },
+		'兰螳花': { requireItem: 'deco_pink_dress', attract: '粉色连衣裙' }
 	};
 
 
@@ -5305,15 +5310,6 @@ setup.initGameData = function () {
 			v._cookingBuffs = {};
 		}
 		switch (special) {
-			case 'nextSalvageBoost':
-				v._cookingBuffs.nextSalvageBoost = true;
-				break;
-			case 'healPartnerStatus':
-
-				break;
-			case 'nextExploreHalfCost':
-				v._cookingBuffs.nextExploreHalfCost = true;
-				break;
 			case 'grantMeatJerky':
 
 				setup.grantItem('food_meat_jerky', 3);
@@ -5322,12 +5318,11 @@ setup.initGameData = function () {
 				if (!v._cookingBuffs) {
 					v._cookingBuffs = {};
 				}
-				var nowTs = Date.now();
-				var expireTs = v._cookingBuffs.tempStaminaCap3Expire || 0;
-				if (expireTs <= nowTs) {
+				if (!v._cookingBuffs.tempStaminaCap3Active) {
 					v.tiliMax += 3;
+					v._cookingBuffs.tempStaminaCap3Active = true;
 				}
-				v._cookingBuffs.tempStaminaCap3Expire = nowTs + 24 * 60 * 60 * 1000;
+				v._cookingBuffs.tempStaminaCap3Remaining = 20;
 				break;
 			case 'nextCaptureBoost':
 				v._cookingBuffs.nextCaptureBoost = true;
@@ -5335,6 +5330,19 @@ setup.initGameData = function () {
 			case 'grantPokeball':
 				setup.grantItem('jinlinqiu', 1);
 				break;
+		}
+	};
+
+	setup.tickTempStaminaCap3 = function () {
+		var v = State.variables;
+		if (!v._cookingBuffs || !v._cookingBuffs.tempStaminaCap3Active) {
+			return;
+		}
+		v._cookingBuffs.tempStaminaCap3Remaining = (v._cookingBuffs.tempStaminaCap3Remaining || 0) - 1;
+		if (v._cookingBuffs.tempStaminaCap3Remaining <= 0) {
+			v.tiliMax = Math.max(10, v.tiliMax - 3);
+			v._cookingBuffs.tempStaminaCap3Active = false;
+			v._cookingBuffs.tempStaminaCap3Remaining = 0;
 		}
 	};
 
@@ -5421,16 +5429,6 @@ setup.initGameData = function () {
 			}
 		}
 		return result;
-	};
-
-	setup.specialEffectNames = {
-		nextSalvageBoost: '下次打捞品质提升',
-		healPartnerStatus: '治愈随行宝可梦异常状态',
-		nextExploreHalfCost: '下次探索体力消耗减半',
-		grantMeatJerky: '额外获得小份肉干',
-		tempStaminaCap3: '体力上限临时+3',
-		nextCaptureBoost: '下次捕捉率提升',
-		grantPokeball: '额外获得精灵球'
 	};
 
 	setup.achievementDefs = {
@@ -7755,6 +7753,13 @@ setup.getCaptureSuccessRate = function (ballId, mon) {
 			base = 1;
 		}
 	}
+	if (State.variables._cookingBuffs && State.variables._cookingBuffs.nextCaptureBoost) {
+		base = base * 1.1;
+		if (base > 1) {
+			base = 1;
+		}
+		State.variables._cookingBuffs.nextCaptureBoost = false;
+	}
 	return base;
 };
 
@@ -8604,9 +8609,14 @@ setup.migrateSaveData = function () {
 		v.mysteryEggHatchReady = true;
 	}
 	setup.normalizeMysteryEggsInBag();
-	if (v._cookingBuffs && v._cookingBuffs.tempStaminaCap3Expire && v._cookingBuffs.tempStaminaCap3Expire <= Date.now()) {
-		v.tiliMax = Math.max(10, v.tiliMax - 3);
-		v._cookingBuffs.tempStaminaCap3Expire = 0;
+	if (v._cookingBuffs && v._cookingBuffs.tempStaminaCap3Expire) {
+		if (v._cookingBuffs.tempStaminaCap3Expire <= Date.now()) {
+			v.tiliMax = Math.max(10, v.tiliMax - 3);
+		} else {
+			v._cookingBuffs.tempStaminaCap3Active = true;
+			v._cookingBuffs.tempStaminaCap3Remaining = 20;
+		}
+		delete v._cookingBuffs.tempStaminaCap3Expire;
 	}
 	if (v.ch3ExploreDone == null) {
 		v.ch3ExploreDone = false;
@@ -9168,6 +9178,7 @@ setup.doSalvageAction = function (chapterKey) {
 	if (chapterKey === 'ch3') {
 		setup.applyStaminaCost(1);
 	}
+	setup.tickTempStaminaCap3();
 	v.salvageCount = (v.salvageCount || 0) + 1;
 	setup.checkSalvageCountAchievements();
 	setup.trackSalvageLife(1);
@@ -9251,6 +9262,9 @@ setup.recalcMaxStamina = function () {
 	var baseMax = 10;
 	var bonus = (info && info.staminaBonus) ? info.staminaBonus : 0;
 	var newMax = baseMax + bonus;
+	if (v._cookingBuffs && v._cookingBuffs.tempStaminaCap3Active) {
+		newMax += 3;
+	}
 	v.tiliMax = newMax;
 
 	if (v.tili > newMax) {
@@ -9376,6 +9390,11 @@ setup.isRestVisitorEligible = function (mon) {
 	}
 	if (rule.requireCredits != null) {
 		if ((v.xuefen || 0) < rule.requireCredits) {
+			return false;
+		}
+	}
+	if (rule.requireRestLevel != null) {
+		if ((v.restAreaLevel || 0) < rule.requireRestLevel) {
 			return false;
 		}
 	}
@@ -10579,6 +10598,7 @@ setup.doChapterAction = function (chapterKey, mode) {
 	if (chapterKey === 'ch3') {
 		setup.applyStaminaCost(1);
 	}
+	setup.tickTempStaminaCap3();
 	if (mode === 'explore') {
 		setup.markChapterExploreDone(chapterKey);
 		setup.trackWeeklyProgress(chapterKey, 'explore', 1);
@@ -10634,6 +10654,7 @@ setup.doCaveAction = function (chapterKey) {
 	if (!access.ok) {
 		return { ok: false, msg: access.msg };
 	}
+	setup.tickTempStaminaCap3();
 	return setup.rollCaveEncounter(chapterKey);
 };
 
@@ -11266,13 +11287,10 @@ setup.useConsumable = function (itemId) {
 	if (def.isDish && def.special) {
 		setup.applyCookingSpecial(def.special);
 		var specialDesc = {
-			nextSalvageBoost: '下次打捞出货率提升！',
-			nextExploreHalfCost: '下次探索体力减半！',
 			nextCaptureBoost: '下次捕捉成功率提升！',
 			tempStaminaCap3: '体力上限临时 +3！',
 			grantPokeball: '获得了一个精灵球！',
-			grantMeatJerky: '额外获得了小份肉干 ×3！',
-			healPartnerStatus: '随行宝可梦状态恢复了。'
+			grantMeatJerky: '额外获得了小份肉干 ×3！'
 		};
 		if (specialDesc[def.special]) {
 			effectMsg += '<br>' + specialDesc[def.special];
@@ -11532,7 +11550,12 @@ postrender['weeklyTaskToast'] = function () {
 	}
 };
 </script><tw-passagedata pid="1" name="声明" tags="" position="1900,75" size="100,100">声明:
-现在版本为v1.2版本
+现在版本为v1.3版本
+
+v1.3版本
+休息区新增四位宝可梦（休息区宝可梦不能重复捕捉）
+第一章新增3位宝可梦，第二章新增2位宝可梦
+尝试着修复了学分回退的问题...但是电脑我测试一直没问题所以不知道修复的成功率orz
 
 v1.2版本
 更新：修复了食谱食物重复加体力上限的bug
@@ -12271,11 +12294,11 @@ v1.1版本
 &lt;/div&gt;
 
 &lt;ul class=&quot;chapter-action-list&quot;&gt;
-&lt;li class=&quot;chapter-action-item chapter-action-item--confirm&quot;&gt;[[确认兑换-&gt;学分商店兑换完成]]&lt;/li&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--confirm&quot;&gt;&lt;&lt;link &quot;确认兑换&quot;&gt;&gt;&lt;&lt;set $exchangeResult to setup.completePendingExchange()&gt;&gt;&lt;&lt;goto &quot;学分商店兑换完成&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/li&gt;
 &lt;li class=&quot;chapter-action-item chapter-action-item--cancel&quot;&gt;[[取消-&gt;学分商店兑换]]&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="14" name="学分商店兑换完成" tags="" position="775,825" size="100,100">&lt;&lt;set _exResult to setup.completePendingExchange()&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="14" name="学分商店兑换完成" tags="" position="775,825" size="100,100">&lt;&lt;set _exResult to $exchangeResult&gt;&gt;
 
 &lt;div class=&quot;chapter-page&quot;&gt;
 
