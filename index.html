@@ -3795,7 +3795,7 @@ setup.initGameData = function () {
 			'九尾', '皮可西', '长尾怪手', '大尾狸', '安瓢虫', '雨翅蛾', '蜂女王',
 			'谢米'
 		],
-		['喵喵', '大葱鸭', '小火龙', '乌波', '妙喵', '卡蒂狗', '海豹球', '伊布', '电飞鼠', '毛辫羊']
+		['喵喵', '大葱鸭', '小火龙', '乌波', '妙喵', '卡蒂狗', '海豹球', '伊布', '电飞鼠', '毛辫羊', '兰螳花']
 	);
 
 	ch1SalvagePokemon = setup.buildModePokemonPool(
@@ -3928,7 +3928,7 @@ setup.initGameData = function () {
 		[
 			'牙牙', '溶食兽', '三蜜蜂', '黏黏宝', '图图犬', '奇洛栗鼠',
 			'木木枭', '炎兔儿', '魔尼尼', '藤藤蛇', '巨锻匠',
-			'四季鹿', '破破袋', '天然雀', '兰螳花'
+			'四季鹿', '破破袋', '天然雀', '兰螳花', '雷伊布', '敲音猴'
 		],
 		[],
 		[]
@@ -3951,7 +3951,9 @@ setup.initGameData = function () {
 		'四季鹿': { requireRestLevel: 2, attract: '舒适的休息区' },
 		'破破袋': { requireItem: 'deco_gold_bin', attract: '金色垃圾桶' },
 		'天然雀': { requireItem: 'deco_signboard', attract: '告示牌' },
-		'兰螳花': { requireItem: 'deco_pink_dress', attract: '粉色连衣裙' }
+		'兰螳花': { requireItem: 'deco_pink_dress', attract: '粉色连衣裙' },
+		'雷伊布': { requireItem: 'deco_lightning_rod', attract: '避雷针' },
+		'敲音猴': { requireItem: 'deco_hand_drum', attract: '拨浪鼓' }
 	};
 
 
@@ -4771,6 +4773,24 @@ setup.initGameData = function () {
 			passage: '常驻事件-滑落洞穴',
 			staminaCost: 2,
 			requiresItems: null
+		},
+		{
+			id: 'ch2_repeat_salt',
+			name: '第二章探索·烈日岩盐',
+			desc: '',
+			repeatable: true,
+			passage: '常驻事件-找盐粉',
+			staminaCost: 2,
+			requiresItems: null
+		},
+		{
+			id: 'ch2_repeat_cactus',
+			name: '第二章探索·沙漠仙人掌',
+			desc: '',
+			repeatable: true,
+			passage: '常驻事件-找仙人掌果',
+			staminaCost: 2,
+			requiresItems: null
 		}
 	);
 	setup.chapterEvents.ch3.explore.push(
@@ -4790,6 +4810,24 @@ setup.initGameData = function () {
 			repeatable: true,
 			passage: '常驻事件-帮老师',
 			staminaCost: 0,
+			requiresItems: null
+		},
+		{
+			id: 'ch3_repeat_ice',
+			name: '第三章探索·敲碎冰雕',
+			desc: '',
+			repeatable: true,
+			passage: '常驻事件-找冰块',
+			staminaCost: 2,
+			requiresItems: null
+		},
+		{
+			id: 'ch3_repeat_milk',
+			name: '第三章探索·冰河牛奶',
+			desc: '',
+			repeatable: true,
+			passage: '常驻事件-找牛奶',
+			staminaCost: 2,
 			requiresItems: null
 		}
 	);
@@ -4904,7 +4942,7 @@ setup.initGameData = function () {
 		{ id: 1, name: '变成宝可梦了啊？！', passage: '活动1-变成宝可梦' },
 		{ id: 2, name: '我-是谁？', passage: '活动2-我是谁' },
 		{ id: 3, name: '温暖的，舞蹈的，冬天', passage: '活动3-篝火晚会' },
-		{ id: 4, name: '乌波大量出没!?', passage: '活动4-乌波大量出没' },
+		{ id: 4, name: '乌波大量..大量拯救？！', passage: '活动4-乌波大量出没' },
 		{ id: 5, name: '会动的岛屿', passage: '活动5-会动的岛屿' },
 		{ id: 6, name: '消失的一切', passage: '活动6-消失的一切' }
 	];
@@ -4944,6 +4982,10 @@ setup.initGameData = function () {
 	setup.itemDefs.food_snail = { name: '螺肉', type: 'food', staminaRestore: 4, ingredientCat: 'meat' };
 	setup.itemDefs.food_mushroom = { name: '蘑菇', type: 'food', staminaRestore: 2, ingredientCat: 'veg' };
 	setup.itemDefs.food_honey = { name: '蜂蜜', type: 'food', staminaRestore: 3, ingredientCat: 'seasoning' };
+	setup.itemDefs.food_salt = { name: '盐粉', type: 'food', staminaRestore: -4, ingredientCat: 'salt' };
+	setup.itemDefs.food_cactus = { name: '仙人掌果', type: 'food', staminaRestore: 2, ingredientCat: 'cactus' };
+	setup.itemDefs.food_ice = { name: '冰块', type: 'food', staminaRestore: 2, ingredientCat: 'ice' };
+	setup.itemDefs.food_milk = { name: '牛奶', type: 'food', staminaRestore: 2, ingredientCat: 'dairy' };
 	setup.itemDefs.food_meat_jerky = { name: '小份肉干', type: 'food', staminaRestore: 5 };
 	setup.itemDefs.item_pearl = { name: '珍珠', type: 'material' };
 	setup.itemDefs.fur_wood_table = { name: '木桌子', type: 'material' };
@@ -4986,6 +5028,8 @@ setup.initGameData = function () {
 	setup.itemDefs.deco_rainbow_tent = { name: '七彩帐篷', type: 'collectible' };
 	setup.itemDefs.deco_vip_bench = { name: '贵宾豪华长椅', type: 'collectible' };
 	setup.itemDefs.deco_iron_gate = { name: '大铁门', type: 'collectible' };
+	setup.itemDefs.deco_lightning_rod = { name: '避雷针', type: 'collectible' };
+	setup.itemDefs.deco_hand_drum = { name: '拨浪鼓', type: 'collectible' };
 	setup.itemDefs.deco_feather_hat = { name: '黑色充满花哨羽毛的礼帽', type: 'collectible' };
 	setup.itemDefs.deco_eye_mask = { name: '眼罩', type: 'collectible' };
 	setup.itemDefs.deco_eevee_gloves = { name: '伊布手套', type: 'collectible' };
@@ -5039,7 +5083,11 @@ setup.initGameData = function () {
 		meat: { name: '肉类', icon: '🍖' },
 		seafood: { name: '海鲜', icon: '🦐' },
 		staple: { name: '主食', icon: '🍞' },
-		seasoning: { name: '调料', icon: '🧂' }
+		seasoning: { name: '调料', icon: '🧂' },
+		salt: { name: '盐粉', icon: '🧂' },
+		cactus: { name: '仙人掌果', icon: '🌵' },
+		ice: { name: '冰块', icon: '🧊' },
+		dairy: { name: '乳制品', icon: '🥛' }
 	};
 
 
@@ -5097,7 +5145,48 @@ setup.initGameData = function () {
 		{ cats: ['seafood', 'fruit', 'fruit'], heat: 'high', name: '水果炒海鲜', staminaRestore: -1, quality: 'dark', desc: '……这到底是什么黑暗料理界的奇葩组合？你尝了一口，表情复杂地咽了下去。' },
 		{ cats: ['veg', 'seafood', 'seasoning'], heat: 'low', name: '凉拌生蘑菇', staminaRestore: 2, quality: 'dark', desc: '凉的生蘑菇配生海带，再浇上不新鲜的蜂蜜……口感黏糊糊的，味道一言难尽。勉强能吃吧，大概。' },
 		{ cats: ['fruit', 'staple', 'staple'], heat: 'high', name: '烤糊果酱面包', staminaRestore: 1, quality: 'dark', desc: '外面糊了里面的果酱也还没化掉还大块大块的卡在那里，而面包也硬得像砖头。你刮掉焦的部分啃了两口，也算是聊胜于无。' },
-		{ cats: ['seafood', 'seafood', 'seafood'], heat: 'high', name: '干煸海带', staminaRestore: 3, quality: 'dark', desc: '又咸又硬的干煸海带，嚼得腮帮子都酸了。但是海带味儿很足，勉强算……一道菜？' }
+		{ cats: ['seafood', 'seafood', 'seafood'], heat: 'high', name: '干煸海带', staminaRestore: 3, quality: 'dark', desc: '又咸又硬的干煸海带，嚼得腮帮子都酸了。但是海带味儿很足，勉强算……一道菜？' },
+
+		{ cats: ['salt', 'dairy', 'ice'], heat: 'low', name: '冰牛奶', staminaRestore: 8, quality: 'basic', desc: '冰块浮在牛奶里，冰凉爽口还咸咸的呢。' },
+		{ cats: ['cactus', 'ice', 'ice'], heat: 'low', name: '仙人掌果冰沙', staminaRestore: 7, quality: 'basic', desc: '仙人掌果和冰块一起捣碎，夏日必备..虽然现在并不是夏日呢。' },
+		{ cats: ['dairy', 'staple', 'staple'], heat: 'low', name: '牛奶面包', staminaRestore: 8, quality: 'basic', desc: '面包泡进温热的牛奶里，软绵绵暖呼呼，吃的胃很舒服很舒服。' },
+		{ cats: ['ice', 'veg', 'veg'], heat: 'low', name: '冰蘑菇', staminaRestore: 6, quality: 'basic', desc: '冰过的熟蘑菇，算是一道凉拌菜吧。' },
+		{ cats: ['cactus', 'cactus', 'veg'], heat: 'medium', name: '仙人掌果沙拉', staminaRestore: 8, quality: 'basic', desc: '仙人掌果配蘑菇，沙漠风味哦。' },
+		{ cats: ['dairy', 'veg', 'veg'], heat: 'medium', name: '牛奶蘑菇汤', staminaRestore: 9, quality: 'basic', desc: '蔬菜煮进牛奶里，奶香十足哦？' },
+		{ cats: ['ice', 'seafood', 'seafood'], heat: 'low', name: '冰镇海带', staminaRestore: 10, quality: 'basic', desc: '冰镇的海带丝，凉爽脆嫩，当凉菜刚刚好。' },
+		{ cats: ['dairy', 'salt', 'seasoning'], heat: 'low', name: '牛奶蜂蜜饮料', staminaRestore: 8, quality: 'basic', desc: '温牛奶加蜂蜜和一点点一点点盐，甜咸一起，暖暖的很好喝。' },
+		{ cats: ['cactus', 'dairy', 'ice'], heat: 'low', name: '水果奶布丁', staminaRestore: 9, quality: 'basic', desc: '牛奶凝固后再在上面铺上切好的仙人掌果和碎冰，冰爽耶' },
+		{ cats: ['dairy', 'seafood', 'seafood'], heat: 'medium', name: '牛奶煮海带', staminaRestore: 8, quality: 'basic', desc: '海带煮进牛奶里，意外地还行。' },
+		{ cats: ['cactus', 'ice', 'staple'], heat: 'low', name: '冰果面包', staminaRestore: 7, quality: 'basic', desc: '面包夹着冰过的仙人掌果，冰凉清甜，夏天吃正好。' },
+		{ cats: ['dairy', 'meat', 'veg'], heat: 'medium', name: '牛奶炖肉', staminaRestore: 18, quality: 'basic', desc: '螺肉和蘑菇煮进适量的牛奶里，奶香炖肉，嫩滑鲜美。' },
+		{ cats: ['ice', 'meat', 'seafood'], heat: 'low', name: '冰肉海带', staminaRestore: 7, quality: 'basic', desc: '冰过的熟肉配海带，凉嗖嗖的海鲜拼盘呀。' },
+		{ cats: ['cactus', 'dairy', 'veg'], heat: 'low', name: '牛奶水果捞', staminaRestore: 8, quality: 'basic', desc: '树果和仙人掌果洗干净切块泡牛奶，简单又好喝。' },
+		{ cats: ['dairy', 'dairy', 'staple'], heat: 'low', name: '奶油面包布丁', staminaRestore: 20, quality: 'basic', desc: '扭一扭，泡一泡，烤一烤，外脆内软奶香满满呀。' },
+		{ cats: ['cactus', 'ice', 'veg'], heat: 'low', name: '单纯只是冰的蔬菜水果', staminaRestore: 6, quality: 'basic', desc: '小凉菜嘻嘻。' },
+		{ cats: ['dairy', 'meat', 'staple'], heat: 'medium', name: '肉三明治', staminaRestore: 11, quality: 'basic', desc: '面包夹肉沾沾牛奶，三合一美味哦。' },
+		{ cats: ['ice', 'ice', 'staple'], heat: 'low', name: '冷面', staminaRestore: 5, quality: 'basic', desc: '面包撕成条铺在碎冰上，冰冰凉凉的冷面...算是吧。' },
+		{ cats: ['cactus', 'dairy', 'dairy'], heat: 'medium', name: '仙人掌果奶油杯', staminaRestore: 12, quality: 'basic', desc: '牛奶打发后（怎么打的别问）铺上切好的仙人掌果肉，奶香果香一级棒！' },
+		{ cats: ['ice', 'salt', 'seasoning'], heat: 'low', name: '冰盐蜜饮', staminaRestore: 5, quality: 'basic', desc: '碎冰加蜂蜜和盐，算是冰冰咸咸的小甜水吧。' },
+		{ cats: ['dairy', 'seafood', 'staple'], heat: 'medium', name: '奶油海鲜面包粥', staminaRestore: 15, quality: 'basic', desc: '海带面包煮成粥再热一杯牛奶，美味....' },
+		{ cats: ['cactus', 'ice', 'meat'], heat: 'medium', name: '仙人掌果肉冰冰霜', staminaRestore: 10, quality: 'basic', desc: '螺肉配仙人掌果摆在冰碗上，酸甜鲜凉的生肉水果拼盘！？' },
+		{ cats: ['cactus', 'dairy', 'staple'], heat: 'medium', name: '果味牛奶面包', staminaRestore: 9, quality: 'basic', desc: '面包泡牛奶加切好的仙人掌果，甜甜的奶奶的，早餐哦。' },
+		{ cats: ['ice', 'ice', 'seafood'], heat: 'low', name: '海冰沙', staminaRestore: 4, quality: 'basic', desc: '海带丝拌碎冰，冰凉咸鲜，又是一个凉菜！' },
+
+		{ cats: ['cactus', 'dairy', 'dairy'], heat: 'low', name: '仙人掌果奶油布丁', staminaRestore: 20, quality: 'advanced', desc: '牛奶慢炖成浓稠的布丁，顶上再铺满仙人掌果肉，每一口都好好吃耶。' },
+		{ cats: ['dairy', 'ice', 'seafood'], heat: 'medium', name: '冰海鲜奶汤', staminaRestore: 16, quality: 'advanced', desc: '冰凉鲜奶味，非常特别。非常特别...' },
+		{ cats: ['meat', 'salt', 'salt'], heat: 'high', name: '盐焗全肉', staminaRestore: 20, quality: 'advanced', desc: '大量盐粉裹住螺肉高温焗烤，将外壳坚硬的盐壳撬开，内里嫩滑多汁，是大师级的手艺才能做出来的东西' },
+		{ cats: ['cactus', 'dairy', 'ice'], heat: 'medium', name: '果味冰淇淋', staminaRestore: 20, quality: 'advanced', desc: '牛奶和仙人掌果冻成冰，再慢慢切成冰沙，口感绵密的冰品，在这座岛上简直是难得的奢侈品...好想吃冰淇淋' },
+		{ cats: ['dairy', 'ice', 'veg'], heat: 'medium', name: '冰蘑菇奶昔', staminaRestore: 15, quality: 'advanced', desc: '捣鼓捣鼓变成了绿色奶昔，看着古怪但意外地好喝。' },
+		{ cats: ['dairy', 'dairy', 'dairy'], heat: 'low', name: '特浓牛奶 ！', staminaRestore: 15, quality: 'advanced', desc: '三份牛奶慢煮成浓稠的奶酱，喝一口整个人都精神了。或许加点蜂蜜更好？' },
+		{ cats: ['dairy', 'ice', 'ice'], heat: 'low', name: '牛奶刨冰', staminaRestore: 18, quality: 'advanced', desc: '牛奶冻成冰块再刨碎，淋上更多牛奶，奶香奶香奶香！简直是夏日天堂。' },
+		{ cats: ['cactus', 'dairy', 'fruit'], heat: 'high', name: '水果牛奶冻', staminaRestore: 16, quality: 'advanced', desc: '牛奶煮浓后加入树果和仙人掌果再凝成冻，铛铛！果冻！' },
+		{ cats: ['dairy', 'meat', 'meat'], heat: 'high', name: '奶油炖双肉', staminaRestore: 22, quality: 'advanced', desc: '两份螺肉煮进浓牛奶里，炖到入口即化。' },
+
+		{ cats: ['ice', 'ice', 'ice'], heat: 'any', name: '纯吃冰', staminaRestore: -2, quality: 'dark', desc: '三块冰...你除了冰水什么也没得到。舌头冻麻了好热好冷好热好冷，肚子更饿了。' },
+		{ cats: ['dairy', 'dairy', 'dairy'], heat: 'high', name: '焦牛奶', staminaRestore: -3, quality: 'dark', desc: '牛奶煮过头变成了焦黑的奶皮，苦涩又腥，整个锅都毁了。得去找材料做点新锅...' },
+		{ cats: ['cactus', 'ice', 'meat'], heat: 'high', name: '冰火两重天', staminaRestore: -20, quality: 'dark', desc: '冰火交加，肉半生不熟还有冰碴子，口感极其混乱。' },
+		{ cats: ['cactus', 'dairy', 'seafood'], heat: 'high', name: '海鲜奶糊糊', staminaRestore: -10, quality: 'dark', desc: '牛奶海带仙人掌果一锅乱炖，奶腥味和海腥味混在一起...试着喝了一口，差点吐出来。给别人喝吧。' },
+		{ cats: ['dairy', 'ice', 'meat'], heat: 'high', name: '冰牛奶泡生螺肉', staminaRestore: -8, quality: 'dark', desc: '冰牛奶泡着没熟的螺肉，扔进大火的锅里。看着就反胃。' }
 	];
 
 	setup.registerDishItems = function () {
@@ -5465,6 +5554,9 @@ setup.initGameData = function () {
 		ach_shell_mililong: { name: '贝壳里的小秘密', desc: '第一次在贝壳里发现米立龙' },
 		ach_atlantis: { name: '亚特兰蒂斯', desc: '成功潜入会动的岛屿下方的颠倒建筑' },
 		ach_island_almost: { name: '只要达到那个地方……', desc: '潜入会动的岛屿时体力耗尽而失败' },
+		ach_wooper_10: { name: '乌波拯救者', desc: '乌波大量拯救活动中累计拯救 10 只乌波' },
+		ach_wooper_50: { name: '58同城', desc: '乌波大量拯救活动中累计拯救 50 只乌波' },
+		ach_wooper_100: { name: '包揽全局！', desc: '乌波大量拯救活动中累计拯救 100 只乌波' },
 		ach_ch1_bird_gone: { name: '鸟去楼空', desc: '遭遇事件·观鸟者终被…', hidden: true },
 		ach_ch1_bird_watched: { name: '观鸟者终被观', desc: '遭遇事件·观鸟者终被…', hidden: true },
 		ach_ch1_numb_joy: { name: '麻痹的幸福', desc: '遭遇事件·并不是触电', hidden: true },
@@ -5634,7 +5726,8 @@ setup.initGameData = function () {
 			{ id: 'deco_rainbow_tent', weight: 2 },
 			{ id: 'deco_vip_bench', weight: 2 },
 			{ id: 'deco_iron_gate', weight: 2 },
-			{ id: 'deco_ditto_statue', weight: 1 }
+			{ id: 'deco_ditto_statue', weight: 1 },
+			{ id: 'deco_lightning_rod', weight: 2 }
 		],
 		ch1_wardrobe: [
 			{ id: 'deco_pink_dress', weight: 1 },
@@ -5676,7 +5769,8 @@ setup.initGameData = function () {
 			{ id: 'deco_ocean_tank_top', weight: 1 },
 			{ id: 'deco_explorer_hat', weight: 1 },
 			{ id: 'deco_hiking_boots', weight: 1 },
-			{ id: 'deco_knee_pads', weight: 1 }
+			{ id: 'deco_knee_pads', weight: 1 },
+			{ id: 'deco_hand_drum', weight: 1 }
 		],
 		ch3_wardrobe: [
 			{ id: 'deco_iron_helmet', weight: 1 },
@@ -8145,7 +8239,18 @@ setup.exchangeAchievementCatalog = [
 	{ id: 'ach_count_5', name: '成功解锁5个成就', need: 5, credits: 400 },
 	{ id: 'ach_count_10', name: '成功解锁10个成就', need: 10, credits: 600 },
 	{ id: 'ach_count_15', name: '成功解锁15个成就', need: 15, credits: 800 },
-	{ id: 'ach_count_20', name: '成功解锁20个成就', need: 20, credits: 1200 }
+	{ id: 'ach_count_20', name: '成功解锁20个成就', need: 20, credits: 1200 },
+	{ id: 'ach_count_25', name: '解锁成就25个', need: 25, credits: 1600 },
+	{ id: 'ach_count_40', name: '解锁成就40个', need: 40, credits: 3000 },
+	{ id: 'ach_count_50', name: '解锁50个成就', need: 50, credits: 4500 },
+	{ id: 'ach_count_60', name: '解锁60个成就', need: 60, credits: 6500 }
+];
+
+setup.exchangeBadgeCatalog = [
+	{ id: 'badge_count_1', name: '获得一枚徽章', credits: 1000 },
+	{ id: 'badge_count_2', name: '获得两枚徽章', credits: 2000 },
+	{ id: 'badge_count_4', name: '获得4枚徽章', credits: 4000 },
+	{ id: 'badge_count_6', name: '获得6枚徽章', credits: 6000 }
 ];
 
 setup.countUnlockedAchievements = function () {
@@ -8178,6 +8283,20 @@ setup.getAchievementExchangeState = function (item) {
 	return { ok: true, claimed: false, locked: false, msg: '' };
 };
 
+setup.getBadgeExchangeState = function (item) {
+	var v = State.variables;
+	if (!item) {
+		return { ok: false, claimed: false, locked: true, msg: '无效兑换项。' };
+	}
+	if (!v.exchangeClaimed) {
+		v.exchangeClaimed = {};
+	}
+	if (v.exchangeClaimed[item.id]) {
+		return { ok: false, claimed: true, locked: false, msg: '已兑换过。' };
+	}
+	return { ok: true, claimed: false, locked: false, msg: '' };
+};
+
 setup.completePendingExchange = function () {
 	var v = State.variables;
 	var credits = Number(v.pendingExchangeCredits) || 0;
@@ -8197,6 +8316,25 @@ setup.completePendingExchange = function () {
 			}
 		}
 		state = setup.getAchievementExchangeState(item);
+		if (!state.ok) {
+			v.pendingExchangeCredits = 0;
+			v.pendingExchangeId = '';
+			v.pendingExchangeKind = '';
+			return { ok: false, msg: state.msg || '无法兑换。', credits: 0 };
+		}
+		if (!v.exchangeClaimed) {
+			v.exchangeClaimed = {};
+		}
+		v.exchangeClaimed[id] = true;
+	} else if (v.pendingExchangeKind === 'badge') {
+		item = null;
+		for (i = 0; i < setup.exchangeBadgeCatalog.length; i++) {
+			if (setup.exchangeBadgeCatalog[i].id === id) {
+				item = setup.exchangeBadgeCatalog[i];
+				break;
+			}
+		}
+		state = setup.getBadgeExchangeState(item);
 		if (!state.ok) {
 			v.pendingExchangeCredits = 0;
 			v.pendingExchangeId = '';
@@ -8860,6 +8998,34 @@ setup.migrateSaveData = function () {
 	if (v.islandDiveChestResult == null) {
 		v.islandDiveChestResult = null;
 	}
+	if (v.islandDiveWinningChest == null) {
+		v.islandDiveWinningChest = 0;
+	}
+	if (v.islandDiveSuperBallClaimed == null) {
+		v.islandDiveSuperBallClaimed = false;
+	}
+	if (v.islandDiveEggClaimed == null) {
+		v.islandDiveEggClaimed = false;
+	}
+	if (v.islandDiveEggClaimed === false && (v.pendingShinyEgg || (v.itemBag && v.itemBag.item_poke_egg))) {
+		v.islandDiveEggClaimed = true;
+	}
+	if (v.wooperRescueTotal == null) {
+		v.wooperRescueTotal = 0;
+	}
+	if (v.wooperRescueIronGot == null) {
+		v.wooperRescueIronGot = false;
+	}
+	if (v.wooperRescueHiddenSpot == null) {
+		v.wooperRescueHiddenSpot = '';
+	}
+	if (v.wooperRescueHiddenCount == null) {
+		v.wooperRescueHiddenCount = 0;
+	}
+	if (v.islandDiveSuccess && !v.islandDiveChestClaimed && !v.islandDiveWinningChest) {
+		v.islandDiveWinningChest = random(1, 3);
+	}
+	setup.checkWooperRescueAchievements();
 	if (v.pokemonBag) {
 		for (i = 0; i < v.pokemonBag.length; i++) {
 			setup.ensureMonBondFields(v.pokemonBag[i]);
@@ -9638,6 +9804,7 @@ setup.startIslandDive = function () {
 	v.islandDiveChestClaimed = false;
 	v.islandDiveRewardMsg = '';
 	v.islandDiveChestResult = null;
+	v.islandDiveWinningChest = 0;
 	return {
 		ok: true,
 		routeHint: hint
@@ -9699,6 +9866,7 @@ setup.doIslandDiveStep = function (dir) {
 		if (setup.unlockAchievement('ach_atlantis')) {
 			achNew = setup.getAchievementName('ach_atlantis');
 		}
+		v.islandDiveWinningChest = random(1, 3);
 		v.islandDiveLastResult = {
 			ok: true,
 			success: true,
@@ -9720,40 +9888,232 @@ setup.doIslandDiveStep = function (dir) {
 	return v.islandDiveLastResult;
 };
 
-setup.claimIslandDiveChest = function (chestId) {
+setup.islandDiveEmptyChestMsg = '看来奖励在其他箱子里...你这样想着刚准备去开其他宝箱就发现整个地下变得扭曲消散..再醒来已经在海滩上。';
+
+setup.getIslandDiveMajorRewardPool = function () {
 	var v = State.variables;
-	var rewardMsg = '';
-	var beachMsg = '在你打开宝箱的一瞬间，整个建筑都开始扭曲，你再睁开眼时已经回到了最近的沙滩上…\n不过往岛屿的下方看去建筑依旧在那里。\n看来并没有真的扭曲消失掉。';
-	if (!v.islandDiveSuccess) {
-		return { ok: false, msg: '尚未成功到达建筑内部。' };
+	var pool = [];
+	if (!v.islandDiveSuperBallClaimed) {
+		pool.push('superball');
 	}
-	if (v.islandDiveChestClaimed) {
-		return { ok: false, msg: '本次已打开过宝箱。' };
+	if (!v.islandDiveEggClaimed) {
+		pool.push('egg');
 	}
-	if (chestId === 1) {
+	if (!v.hasEyeStone) {
+		pool.push('eyestone');
+	}
+	return pool;
+};
+
+setup.grantIslandDiveMajorReward = function (kind) {
+	var v = State.variables;
+	if (kind === 'superball') {
 		v.chaojiqiu = (v.chaojiqiu || 0) + 50;
-		rewardMsg = '获得了超级球 × 50！';
-	} else if (chestId === 2) {
+		v.islandDiveSuperBallClaimed = true;
+		return '获得了超级球 × 50！';
+	}
+	if (kind === 'egg') {
 		setup.grantItem('item_poke_egg', 1);
 		if (!v.pendingShinyEgg || !v.pendingShinyEgg.hatchDate) {
 			v.pendingShinyEgg = {
 				hatchDate: setup.addDaysToDateStr(setup.getTodayDate(), 1)
 			};
 		}
-		rewardMsg = '获得了一颗宝可梦蛋！它似乎明天就要孵化了。';
-	} else if (chestId === 3) {
+		v.islandDiveEggClaimed = true;
+		return '获得了一颗宝可梦蛋！它似乎明天就要孵化了。';
+	}
+	if (kind === 'eyestone') {
 		v.hasEyeStone = true;
 		setup.grantItem('item_eye_stone', 1);
-		rewardMsg = '获得了眼石！带在身上似乎能看清黑暗的深处。';
-	} else {
-		return { ok: false, msg: '无宝箱。' };
+		return '获得了眼石！带在身上似乎能看清黑暗的深处。';
+	}
+	return '';
+};
+
+setup.grantIslandDiveMinorReward = function () {
+	var v = State.variables;
+	var options = [
+		function () {
+			v.jinlinqiu = (v.jinlinqiu || 0) + 10;
+			return '获得了精灵球 × 10！';
+		},
+		function () {
+			setup.grantItem('mat_wood', 10);
+			return '获得了木板 × 10！';
+		},
+		function () {
+			setup.grantItem('mat_iron', 10);
+			return '获得了铁材料 × 10！';
+		}
+	];
+	return options[random(0, options.length - 1)]();
+};
+
+setup.claimIslandDiveChest = function (chestId) {
+	var v = State.variables;
+	var rewardMsg = '';
+	var beachMsg = '在你打开宝箱的一瞬间，整个建筑都开始扭曲，你再睁开眼时已经回到了最近的沙滩上…\n不过往岛屿的下方看去建筑依旧在那里。\n看来并没有真的扭曲消失掉。';
+	var majorPool;
+	var kind;
+	if (!v.islandDiveSuccess) {
+		return { ok: false, msg: '尚未成功到达建筑内部。' };
+	}
+	if (v.islandDiveChestClaimed) {
+		return { ok: false, msg: '本次已打开过宝箱。' };
 	}
 	v.islandDiveChestClaimed = true;
+	if (Number(chestId) !== Number(v.islandDiveWinningChest)) {
+		return {
+			ok: true,
+			empty: true,
+			msg: setup.islandDiveEmptyChestMsg
+		};
+	}
+	majorPool = setup.getIslandDiveMajorRewardPool();
+	if (majorPool.length) {
+		kind = majorPool[random(0, majorPool.length - 1)];
+		rewardMsg = setup.grantIslandDiveMajorReward(kind);
+	} else {
+		rewardMsg = setup.grantIslandDiveMinorReward();
+	}
 	v.islandDiveRewardMsg = rewardMsg;
 	return {
 		ok: true,
 		rewardMsg: rewardMsg,
 		msg: rewardMsg + '\n\n' + beachMsg
+	};
+};
+
+setup.wooperRescueSpots = ['tree', 'stone', 'sand', 'sea', 'pit'];
+
+setup.wooperRescueFoundLines = {
+	tree: ['你晃了晃树', '你踹了踹树', '你看了眼树顶'],
+	stone: ['你搬开了石头', '你踹开了石头', '你拿起了石头'],
+	sand: ['你扫开了沙子', '你鼓足气吹开了沙包', '你坐在了沙子上面沙子下蛄蛹着..'],
+	sea: ['你看见海面飘着什么...'],
+	pit: ['你朝着坑里看了看']
+};
+
+setup.rollWooperRescueRound = function () {
+	var v = State.variables;
+	var spots = setup.wooperRescueSpots;
+	v.wooperRescueHiddenSpot = spots[random(0, spots.length - 1)];
+	v.wooperRescueHiddenCount = random(1, 3);
+};
+
+setup.ensureWooperRescueState = function () {
+	var v = State.variables;
+	if (v.wooperRescueTotal == null) {
+		v.wooperRescueTotal = 0;
+	}
+	if (v.wooperRescueIronGot == null) {
+		v.wooperRescueIronGot = false;
+	}
+	if (!v.wooperRescueHiddenSpot) {
+		setup.rollWooperRescueRound();
+	}
+};
+
+setup.pickWooperRescueReward = function () {
+	var v = State.variables;
+	var pool = [
+		{
+			grant: function () {
+				v.jinlinqiu = (v.jinlinqiu || 0) + 3;
+			},
+			msg: '精灵球 +3'
+		},
+		{
+			grant: function () {
+				v.chaojiqiu = (v.chaojiqiu || 0) + 2;
+			},
+			msg: '超级球 +2'
+		},
+		{
+			grant: function () {
+				v.xuefen = (v.xuefen || 0) + 200;
+			},
+			msg: '信老师赞助学分 200'
+		},
+		{
+			grant: function () {
+				setup.grantItem('mat_cloth', 2);
+			},
+			msg: '布料 +2'
+		}
+	];
+	var pick;
+	if (!v.wooperRescueIronGot) {
+		pool.push({
+			grant: function () {
+				setup.grantItem('mat_iron', 1);
+				v.wooperRescueIronGot = true;
+			},
+			msg: '铁材料 +1'
+		});
+	}
+	pick = pool[random(0, pool.length - 1)];
+	pick.grant();
+	return pick.msg;
+};
+
+setup.checkWooperRescueAchievements = function () {
+	var v = State.variables;
+	var unlocked = [];
+	var total = v.wooperRescueTotal || 0;
+	if (total >= 10 && setup.unlockAchievement('ach_wooper_10')) {
+		unlocked.push(setup.getAchievementName('ach_wooper_10'));
+	}
+	if (total >= 50 && setup.unlockAchievement('ach_wooper_50')) {
+		unlocked.push(setup.getAchievementName('ach_wooper_50'));
+	}
+	if (total >= 100 && setup.unlockAchievement('ach_wooper_100')) {
+		unlocked.push(setup.getAchievementName('ach_wooper_100'));
+	}
+	return unlocked;
+};
+
+setup.searchWooperRescue = function (spot) {
+	var v = State.variables;
+	var count;
+	var lines;
+	var line;
+	var foundMsg;
+	var rewardMsg;
+	var achievements;
+	setup.ensureWooperRescueState();
+	if ((v.tili || 0) < 1) {
+		return { ok: false, msg: '体力不足，无法继续寻找乌波。' };
+	}
+	if (spot !== v.wooperRescueHiddenSpot) {
+		setup.applyStaminaCost(1);
+		return {
+			ok: true,
+			found: false,
+			msg: '这里并没有乌波的身影呢...去其他地方看看吧。',
+			staminaCost: 1
+		};
+	}
+	if ((v.tili || 0) < 2) {
+		return { ok: false, msg: '体力不足（找到乌波后运送至大岛还需额外消耗 1 体力）。' };
+	}
+	setup.applyStaminaCost(2);
+	count = v.wooperRescueHiddenCount || 1;
+	lines = setup.wooperRescueFoundLines[spot] || ['你仔细找了找'];
+	line = lines[random(0, lines.length - 1)];
+	foundMsg = line + '，居然找到了' + count + '只乌波！\n为了报答你的感谢沼王送你了一些他在海上找到的小宝贝';
+	rewardMsg = setup.pickWooperRescueReward();
+	v.wooperRescueTotal = (v.wooperRescueTotal || 0) + count;
+	setup.rollWooperRescueRound();
+	achievements = setup.checkWooperRescueAchievements();
+	return {
+		ok: true,
+		found: true,
+		msg: foundMsg,
+		rewardMsg: '获得：' + rewardMsg,
+		staminaCost: 2,
+		total: v.wooperRescueTotal,
+		achievementNew: achievements
 	};
 };
 
@@ -11352,6 +11712,7 @@ setup.sceneThemeGlobalPassages = {
 	'本周课题': true,
 	'突发活动': true,
 	'活动4-乌波大量出没': true,
+	'活动4-乌波拯救游戏': true,
 	'活动5-会动的岛屿': true,
 	'活动5-潜水准备': true,
 	'活动5-潜水回合': true,
@@ -11386,8 +11747,12 @@ setup.sceneThemeRepeatPassages = {
 	'常驻事件-找蜂蜜': 'beach',
 	'常驻事件-沙尘暴': 'desert',
 	'常驻事件-滑落洞穴': 'desert',
+	'常驻事件-找盐粉': 'desert',
+	'常驻事件-找仙人掌果': 'desert',
 	'常驻事件-滑冰': 'ice',
-	'常驻事件-帮老师': 'ice'
+	'常驻事件-帮老师': 'ice',
+	'常驻事件-找冰块': 'ice',
+	'常驻事件-找牛奶': 'ice'
 };
 
 setup.getSceneTheme = function (passageName) {
@@ -11558,7 +11923,14 @@ postrender['weeklyTaskToast'] = function () {
 	}
 };
 </script><tw-passagedata pid="1" name="声明" tags="" position="1900,75" size="100,100">声明:
-现在版本为v1.3版本
+现在版本为v1.4版本
+
+v1.4版本
+新增2名宝可梦
+学分商店兑换学分更新了新的兑换学分区域
+更新了38份食谱
+更新了第一章活动2和第二章活动2
+
 
 v1.3版本
 休息区新增四位宝可梦（休息区宝可梦不能重复捕捉）
@@ -11718,6 +12090,13 @@ v1.1版本
 &lt;&lt;set $islandDiveChestClaimed to false&gt;&gt;//会动岛屿是否已开箱
 &lt;&lt;set $islandDiveRewardMsg to &quot;&quot;&gt;&gt;//会动岛屿奖励文案
 &lt;&lt;set $islandDiveChestResult to null&gt;&gt;//会动岛屿开箱结果
+&lt;&lt;set $islandDiveWinningChest to 0&gt;&gt;//会动岛屿有奖宝箱编号 1～3
+&lt;&lt;set $islandDiveSuperBallClaimed to false&gt;&gt;//会动岛屿是否已领取超级球×50
+&lt;&lt;set $islandDiveEggClaimed to false&gt;&gt;//会动岛屿是否已领取宝可梦蛋
+&lt;&lt;set $wooperRescueTotal to 0&gt;&gt;//乌波拯救活动累计拯救数量
+&lt;&lt;set $wooperRescueIronGot to false&gt;&gt;//乌波拯救活动是否已获得过铁材料
+&lt;&lt;set $wooperRescueHiddenSpot to &quot;&quot;&gt;&gt;//乌波拯救当前隐藏位置
+&lt;&lt;set $wooperRescueHiddenCount to 0&gt;&gt;//乌波拯救当前隐藏数量
 &lt;&lt;set $fruitTransformMon to null&gt;&gt;//活动1 当日变身宝可梦名
 &lt;&lt;set $fruitTransformDate to null&gt;&gt;//活动1 变身对应现实日期
 &lt;&lt;set $fruitEatDates to []&gt;&gt;//活动1 已食用果实的现实日期列表
@@ -11818,11 +12197,9 @@ v1.1版本
 &lt;div class=&quot;main-menu-event-wrap main-menu-pokeball-btn&quot;&gt;
 [[突发活动]]
 &lt;/div&gt;
-&lt;&lt;if not $timeLockDisabled&gt;&gt;
 &lt;div class=&quot;main-menu-event-wrap&quot; style=&quot;text-align:center;margin-top:8px;&quot;&gt;
 [[密码解锁]]
 &lt;/div&gt;
-&lt;&lt;/if&gt;&gt;
 &lt;/div&gt;
 
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="6" name="背包" tags="" position="350,375" size="100,100">&lt;&lt;run setup.normalizeMysteryEggsInBag()&gt;&gt;
@@ -12280,6 +12657,32 @@ v1.1版本
 &lt;&lt;/capture&gt;&gt;
 &lt;&lt;/for&gt;&gt;
 &lt;/div&gt;
+
+&lt;p class=&quot;chapter-page-text&quot;&gt;请确认已打卡并且找官号兑换过徽章！&lt;/p&gt;
+&lt;div class=&quot;exchange-ach-grid&quot;&gt;
+&lt;&lt;for _badgeEx range setup.exchangeBadgeCatalog&gt;&gt;
+&lt;&lt;capture _badgeEx&gt;&gt;
+&lt;&lt;set _badgeState to setup.getBadgeExchangeState(_badgeEx)&gt;&gt;
+&lt;&lt;if _badgeState.ok&gt;&gt;
+&lt;div class=&quot;exchange-ach-cell has-cost&quot;&gt;
+&lt;&lt;link _badgeEx.name&gt;&gt;
+	&lt;&lt;set $pendingExchangeName to _badgeEx.name&gt;&gt;
+	&lt;&lt;set $pendingExchangeCredits to _badgeEx.credits&gt;&gt;
+	&lt;&lt;set $pendingExchangeKind to &quot;badge&quot;&gt;&gt;
+	&lt;&lt;set $pendingExchangeId to _badgeEx.id&gt;&gt;
+	&lt;&lt;goto &quot;学分商店兑换确认&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;span class=&quot;chapter-action-cost&quot;&gt;+&lt;&lt;print _badgeEx.credits&gt;&gt; 学分&lt;/span&gt;
+&lt;/div&gt;
+&lt;&lt;else&gt;&gt;
+&lt;div class=&quot;exchange-ach-cell has-cost is-disabled&quot;&gt;
+&lt;span class=&quot;exchange-ach-static&quot;&gt;&lt;&lt;print _badgeEx.name&gt;&gt;（已兑）&lt;/span&gt;
+&lt;span class=&quot;chapter-action-cost&quot;&gt;+&lt;&lt;print _badgeEx.credits&gt;&gt; 学分&lt;/span&gt;
+&lt;/div&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;/capture&gt;&gt;
+&lt;&lt;/for&gt;&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -12297,6 +12700,8 @@ v1.1版本
 &lt;span class=&quot;chapter-page-label&quot;&gt;&lt;&lt;print $pendingExchangeName&gt;&gt;&lt;/span&gt;
 &lt;&lt;if $pendingExchangeKind === &quot;achievement&quot;&gt;&gt;
 &lt;p class=&quot;chapter-page-text&quot;&gt;请确认：你已达成上述成就数量条件？&lt;/p&gt;
+&lt;&lt;elseif $pendingExchangeKind === &quot;badge&quot;&gt;&gt;
+&lt;p class=&quot;chapter-page-text&quot;&gt;请确认：你已打卡并且找官号兑换过徽章？&lt;/p&gt;
 &lt;&lt;else&gt;&gt;
 &lt;p class=&quot;chapter-page-text&quot;&gt;请确认：你已完成上述打卡兑换条件？&lt;/p&gt;
 &lt;&lt;/if&gt;&gt;
@@ -15240,26 +15645,157 @@ v1.1版本
 &lt;div class=&quot;chapter-page&quot;&gt;
 
 &lt;header class=&quot;chapter-page-header&quot;&gt;
-&lt;h1 class=&quot;chapter-page-title&quot;&gt;乌波大量出没!?&lt;/h1&gt;
+&lt;h1 class=&quot;chapter-page-title&quot;&gt;乌波大量..大量拯救？！&lt;/h1&gt;
 &lt;/header&gt;
 
 &lt;div class=&quot;chapter-page-panel&quot;&gt;
 &lt;p class=&quot;chapter-page-text wooper-intro-text&quot;&gt;你发现附近的一个小岛上堆满了蓝色的不知道从哪里冒出来的小家伙们…&lt;br&gt;
-他们似乎被困在了那里?可是&lt;span class=&quot;wooper-name-gold&quot;&gt;乌波&lt;/span&gt;明明是会游泳的才对…&lt;br&gt;
+而你附近受伤的沼王在你旁边叫着，风信子老师翻译说：希望你们能把那些孩子带过来...&lt;br&gt;
+看来他们似乎被困在了那里?可是&lt;span class=&quot;wooper-name-gold&quot;&gt;乌波&lt;/span&gt;明明是会游泳的才对…&lt;br&gt;
 不论如何，先试着把他们捞到大岛上来吧!&lt;/p&gt;
 
-&lt;p class=&quot;chapter-page-text&quot;&gt;玩法:
-绘制你拯救乌波的历史性一刻吧!
-在规定时间内拯救最多乌波的同学将获得一枚此活动徽章
-绘制要求:一张图里起码最少得出现一只乌波，每多画一只就多拯救了一只乌波，画面必须出现你的人物以及能看出你在做什么事。&lt;/p&gt;
+&lt;p class=&quot;chapter-page-text&quot;&gt;玩法：&lt;br&gt;
+虽然要带他们离开但是你们一靠近他们就又害怕的躲了回去...去寻找乌波并把他们带回大岛上的沼王身边吧。&lt;/p&gt;
+
+&lt;p class=&quot;chapter-page-text&quot;&gt;绘制拯救乌波的历史性一刻可兑换徽章&lt;br&gt;
+绘制要求:起码最少得出现一只乌波&lt;/p&gt;
 &lt;/div&gt;
 
 &lt;ul class=&quot;chapter-action-list&quot;&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--explore&quot;&gt;
+&lt;&lt;link &quot;开始游戏&quot;&gt;&gt;
+	&lt;&lt;run setup.rollWooperRescueRound()&gt;&gt;
+	&lt;&lt;goto &quot;活动4-乌波拯救游戏&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[离开-&gt;突发活动]]&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;/div&gt;
-&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="92" name="活动5-会动的岛屿" tags="" position="900,125" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
+&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="92" name="活动4-乌波拯救游戏" tags="" position="850,125" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
+
+&lt;&lt;if not setup.isActivityUnlocked(4)&gt;&gt;
+&lt;&lt;goto &quot;突发活动&quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;run setup.ensureWooperRescueState()&gt;&gt;
+
+&lt;div class=&quot;chapter-page&quot;&gt;
+
+&lt;header class=&quot;chapter-page-header&quot;&gt;
+&lt;h1 class=&quot;chapter-page-title&quot;&gt;乌波大量..大量拯救？！&lt;/h1&gt;
+&lt;/header&gt;
+
+&lt;div class=&quot;chapter-page-panel&quot;&gt;
+&lt;p class=&quot;chapter-page-text&quot;&gt;你要在哪里寻找乌波？&lt;/p&gt;
+&lt;p class=&quot;chapter-page-subtitle&quot;&gt;每寻找一次消耗 1 体力，成功找到后因为要运至大岛还需要再消耗 1 体力&lt;/p&gt;
+&lt;p class=&quot;chapter-page-text&quot;&gt;你一共拯救了：&lt;&lt;print $wooperRescueTotal&gt;&gt;只&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;ul class=&quot;chapter-action-list&quot;&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--explore&quot;&gt;
+&lt;&lt;link &quot;树&quot;&gt;&gt;
+	&lt;&lt;set _wooperResult to setup.searchWooperRescue(&quot;tree&quot;)&gt;&gt;
+	&lt;&lt;if not _wooperResult.ok&gt;&gt;
+		&lt;&lt;run Dialog.setup(&quot;提示&quot;, &quot;setup-dialog&quot;); Dialog.wiki(_wooperResult.msg); Dialog.open();&gt;&gt;
+	&lt;&lt;else&gt;&gt;
+		&lt;&lt;set _wooperDialog to _wooperResult.msg&gt;&gt;
+		&lt;&lt;if _wooperResult.found&gt;&gt;
+			&lt;&lt;set _wooperDialog to _wooperDialog + &quot;\n\n&quot; + _wooperResult.rewardMsg&gt;&gt;
+		&lt;&lt;/if&gt;&gt;
+		&lt;&lt;run Dialog.setup(&quot;乌波拯救&quot;, &quot;setup-dialog&quot;); Dialog.wiki(_wooperDialog); Dialog.open();&gt;&gt;
+		&lt;&lt;if _wooperResult.achievementNew and _wooperResult.achievementNew.length&gt;&gt;
+			&lt;&lt;for _achName range _wooperResult.achievementNew&gt;&gt;
+				&lt;&lt;run Dialog.setup(&quot;成就&quot;, &quot;setup-dialog&quot;); Dialog.wiki(&quot;成就解锁：&quot; + _achName); Dialog.open();&gt;&gt;
+			&lt;&lt;/for&gt;&gt;
+		&lt;&lt;/if&gt;&gt;
+	&lt;&lt;/if&gt;&gt;
+	&lt;&lt;goto &quot;活动4-乌波拯救游戏&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--explore&quot;&gt;
+&lt;&lt;link &quot;石头&quot;&gt;&gt;
+	&lt;&lt;set _wooperResult to setup.searchWooperRescue(&quot;stone&quot;)&gt;&gt;
+	&lt;&lt;if not _wooperResult.ok&gt;&gt;
+		&lt;&lt;run Dialog.setup(&quot;提示&quot;, &quot;setup-dialog&quot;); Dialog.wiki(_wooperResult.msg); Dialog.open();&gt;&gt;
+	&lt;&lt;else&gt;&gt;
+		&lt;&lt;set _wooperDialog to _wooperResult.msg&gt;&gt;
+		&lt;&lt;if _wooperResult.found&gt;&gt;
+			&lt;&lt;set _wooperDialog to _wooperDialog + &quot;\n\n&quot; + _wooperResult.rewardMsg&gt;&gt;
+		&lt;&lt;/if&gt;&gt;
+		&lt;&lt;run Dialog.setup(&quot;乌波拯救&quot;, &quot;setup-dialog&quot;); Dialog.wiki(_wooperDialog); Dialog.open();&gt;&gt;
+		&lt;&lt;if _wooperResult.achievementNew and _wooperResult.achievementNew.length&gt;&gt;
+			&lt;&lt;for _achName range _wooperResult.achievementNew&gt;&gt;
+				&lt;&lt;run Dialog.setup(&quot;成就&quot;, &quot;setup-dialog&quot;); Dialog.wiki(&quot;成就解锁：&quot; + _achName); Dialog.open();&gt;&gt;
+			&lt;&lt;/for&gt;&gt;
+		&lt;&lt;/if&gt;&gt;
+	&lt;&lt;/if&gt;&gt;
+	&lt;&lt;goto &quot;活动4-乌波拯救游戏&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--explore&quot;&gt;
+&lt;&lt;link &quot;沙子&quot;&gt;&gt;
+	&lt;&lt;set _wooperResult to setup.searchWooperRescue(&quot;sand&quot;)&gt;&gt;
+	&lt;&lt;if not _wooperResult.ok&gt;&gt;
+		&lt;&lt;run Dialog.setup(&quot;提示&quot;, &quot;setup-dialog&quot;); Dialog.wiki(_wooperResult.msg); Dialog.open();&gt;&gt;
+	&lt;&lt;else&gt;&gt;
+		&lt;&lt;set _wooperDialog to _wooperResult.msg&gt;&gt;
+		&lt;&lt;if _wooperResult.found&gt;&gt;
+			&lt;&lt;set _wooperDialog to _wooperDialog + &quot;\n\n&quot; + _wooperResult.rewardMsg&gt;&gt;
+		&lt;&lt;/if&gt;&gt;
+		&lt;&lt;run Dialog.setup(&quot;乌波拯救&quot;, &quot;setup-dialog&quot;); Dialog.wiki(_wooperDialog); Dialog.open();&gt;&gt;
+		&lt;&lt;if _wooperResult.achievementNew and _wooperResult.achievementNew.length&gt;&gt;
+			&lt;&lt;for _achName range _wooperResult.achievementNew&gt;&gt;
+				&lt;&lt;run Dialog.setup(&quot;成就&quot;, &quot;setup-dialog&quot;); Dialog.wiki(&quot;成就解锁：&quot; + _achName); Dialog.open();&gt;&gt;
+			&lt;&lt;/for&gt;&gt;
+		&lt;&lt;/if&gt;&gt;
+	&lt;&lt;/if&gt;&gt;
+	&lt;&lt;goto &quot;活动4-乌波拯救游戏&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--explore&quot;&gt;
+&lt;&lt;link &quot;海面&quot;&gt;&gt;
+	&lt;&lt;set _wooperResult to setup.searchWooperRescue(&quot;sea&quot;)&gt;&gt;
+	&lt;&lt;if not _wooperResult.ok&gt;&gt;
+		&lt;&lt;run Dialog.setup(&quot;提示&quot;, &quot;setup-dialog&quot;); Dialog.wiki(_wooperResult.msg); Dialog.open();&gt;&gt;
+	&lt;&lt;else&gt;&gt;
+		&lt;&lt;set _wooperDialog to _wooperResult.msg&gt;&gt;
+		&lt;&lt;if _wooperResult.found&gt;&gt;
+			&lt;&lt;set _wooperDialog to _wooperDialog + &quot;\n\n&quot; + _wooperResult.rewardMsg&gt;&gt;
+		&lt;&lt;/if&gt;&gt;
+		&lt;&lt;run Dialog.setup(&quot;乌波拯救&quot;, &quot;setup-dialog&quot;); Dialog.wiki(_wooperDialog); Dialog.open();&gt;&gt;
+		&lt;&lt;if _wooperResult.achievementNew and _wooperResult.achievementNew.length&gt;&gt;
+			&lt;&lt;for _achName range _wooperResult.achievementNew&gt;&gt;
+				&lt;&lt;run Dialog.setup(&quot;成就&quot;, &quot;setup-dialog&quot;); Dialog.wiki(&quot;成就解锁：&quot; + _achName); Dialog.open();&gt;&gt;
+			&lt;&lt;/for&gt;&gt;
+		&lt;&lt;/if&gt;&gt;
+	&lt;&lt;/if&gt;&gt;
+	&lt;&lt;goto &quot;活动4-乌波拯救游戏&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--explore&quot;&gt;
+&lt;&lt;link &quot;坑&quot;&gt;&gt;
+	&lt;&lt;set _wooperResult to setup.searchWooperRescue(&quot;pit&quot;)&gt;&gt;
+	&lt;&lt;if not _wooperResult.ok&gt;&gt;
+		&lt;&lt;run Dialog.setup(&quot;提示&quot;, &quot;setup-dialog&quot;); Dialog.wiki(_wooperResult.msg); Dialog.open();&gt;&gt;
+	&lt;&lt;else&gt;&gt;
+		&lt;&lt;set _wooperDialog to _wooperResult.msg&gt;&gt;
+		&lt;&lt;if _wooperResult.found&gt;&gt;
+			&lt;&lt;set _wooperDialog to _wooperDialog + &quot;\n\n&quot; + _wooperResult.rewardMsg&gt;&gt;
+		&lt;&lt;/if&gt;&gt;
+		&lt;&lt;run Dialog.setup(&quot;乌波拯救&quot;, &quot;setup-dialog&quot;); Dialog.wiki(_wooperDialog); Dialog.open();&gt;&gt;
+		&lt;&lt;if _wooperResult.achievementNew and _wooperResult.achievementNew.length&gt;&gt;
+			&lt;&lt;for _achName range _wooperResult.achievementNew&gt;&gt;
+				&lt;&lt;run Dialog.setup(&quot;成就&quot;, &quot;setup-dialog&quot;); Dialog.wiki(&quot;成就解锁：&quot; + _achName); Dialog.open();&gt;&gt;
+			&lt;&lt;/for&gt;&gt;
+		&lt;&lt;/if&gt;&gt;
+	&lt;&lt;/if&gt;&gt;
+	&lt;&lt;goto &quot;活动4-乌波拯救游戏&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[返回-&gt;活动4-乌波大量出没]]&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="93" name="活动5-会动的岛屿" tags="" position="900,125" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
 
 &lt;&lt;if not setup.isActivityUnlocked(5)&gt;&gt;
 &lt;div class=&quot;chapter-page&quot;&gt;
@@ -15295,7 +15831,7 @@ v1.1版本
 &lt;/ul&gt;
 
 &lt;/div&gt;
-&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="93" name="活动5-潜水准备" tags="" position="1000,125" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
+&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="94" name="活动5-潜水准备" tags="" position="1000,125" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
 &lt;&lt;if not setup.isActivityUnlocked(5)&gt;&gt;
 &lt;&lt;goto &quot;突发活动&quot;&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -15322,7 +15858,7 @@ v1.1版本
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[返回-&gt;活动5-会动的岛屿]]&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="94" name="活动5-潜水回合" tags="" position="1100,125" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="95" name="活动5-潜水回合" tags="" position="1100,125" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
 &lt;&lt;if not $islandDiveRoute or $islandDiveFailed or $islandDiveSuccess&gt;&gt;
 &lt;&lt;if $islandDiveFailed&gt;&gt;
 &lt;&lt;goto &quot;活动5-失败&quot;&gt;&gt;
@@ -15377,7 +15913,7 @@ v1.1版本
 &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="95" name="活动5-成功" tags="" position="1200,125" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="96" name="活动5-成功" tags="" position="1200,125" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
 &lt;&lt;if not $islandDiveSuccess&gt;&gt;
 &lt;&lt;goto &quot;活动5-会动的岛屿&quot;&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -15432,7 +15968,7 @@ v1.1版本
 &lt;/ul&gt;
 &lt;&lt;/if&gt;&gt;
 
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="96" name="活动5-开箱结果" tags="" position="1300,125" size="100,100">&lt;&lt;if not $islandDiveChestResult&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="97" name="活动5-开箱结果" tags="" position="1300,125" size="100,100">&lt;&lt;if not $islandDiveChestResult&gt;&gt;
 &lt;&lt;goto &quot;活动5-会动的岛屿&quot;&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 
@@ -15450,7 +15986,7 @@ v1.1版本
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[离开-&gt;突发活动]]&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="97" name="活动5-失败" tags="" position="1400,125" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="98" name="活动5-失败" tags="" position="1400,125" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
 
 &lt;div class=&quot;chapter-page&quot;&gt;
 
@@ -15476,7 +16012,7 @@ v1.1版本
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[离开-&gt;突发活动]]&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="98" name="烹饪" tags="" position="250,150" size="100,100">&lt;&lt;if not $prologueDone&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="99" name="烹饪" tags="" position="250,150" size="100,100">&lt;&lt;if not $prologueDone&gt;&gt;
 &lt;&lt;goto &quot;主界面&quot;&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;run setup.migrateSaveData()&gt;&gt;
@@ -15702,7 +16238,7 @@ v1.1版本
 
 &lt;&lt;/if&gt;&gt;
 
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="99" name="休息区-逛逛" tags="" position="325,25" size="100,100">&lt;&lt;if not $prologueDone&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="100" name="休息区-逛逛" tags="" position="325,25" size="100,100">&lt;&lt;if not $prologueDone&gt;&gt;
 &lt;&lt;goto &quot;主界面&quot;&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;run setup.migrateSaveData()&gt;&gt;
@@ -15738,7 +16274,7 @@ v1.1版本
 &lt;/ul&gt;
 &lt;&lt;/if&gt;&gt;
 
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="100" name="活动6-消失的一切" tags="" position="1500,125" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="101" name="活动6-消失的一切" tags="" position="1500,125" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
 &lt;&lt;if not setup.isActivityUnlocked(6)&gt;&gt;
 &lt;&lt;goto &quot;突发活动&quot;&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -15767,7 +16303,7 @@ v1.1版本
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[之后再来-&gt;突发活动]]&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="101" name="活动6-剧情" tags="" position="1600,125" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
+&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="102" name="活动6-剧情" tags="" position="1600,125" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
 &lt;&lt;if $activity6Completed&gt;&gt;
 &lt;&lt;goto &quot;活动6-消失的一切&quot;&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -15792,7 +16328,7 @@ v1.1版本
 &lt;ul class=&quot;chapter-action-list&quot;&gt;
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[离开-&gt;突发活动]]&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="102" name="终章-确认" tags="" position="2700,725" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="103" name="终章-确认" tags="" position="2700,725" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
 &lt;&lt;if setup.isFinaleDone()&gt;&gt;
 &lt;&lt;goto &quot;终章-回顾&quot;&gt;&gt;
 &lt;&lt;else&gt;&gt;
@@ -15821,7 +16357,7 @@ v1.1版本
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;&lt;/if&gt;&gt;
-&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="103" name="终章-黑暗" tags="" position="2800,725" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
+&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="104" name="终章-黑暗" tags="" position="2800,725" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
 &lt;&lt;if setup.isFinaleDone()&gt;&gt;
 &lt;&lt;goto &quot;终章-回顾&quot;&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -15840,7 +16376,7 @@ v1.1版本
 &lt;ul class=&quot;chapter-action-list&quot;&gt;
 &lt;li class=&quot;chapter-action-item&quot;&gt;[[继续-&gt;终章-声音]]&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="104" name="终章-声音" tags="" position="2900,725" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="105" name="终章-声音" tags="" position="2900,725" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
 &lt;&lt;if setup.isFinaleDone()&gt;&gt;
 &lt;&lt;goto &quot;终章-回顾&quot;&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -15862,7 +16398,7 @@ v1.1版本
 &lt;ul class=&quot;chapter-action-list&quot;&gt;
 &lt;li class=&quot;chapter-action-item&quot;&gt;[[……-&gt;终章-选择]]&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="105" name="终章-选择" tags="" position="3000,725" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="106" name="终章-选择" tags="" position="3000,725" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
 &lt;&lt;if setup.isFinaleDone()&gt;&gt;
 &lt;&lt;goto &quot;终章-回顾&quot;&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -15893,7 +16429,7 @@ v1.1版本
 &lt;li class=&quot;chapter-action-item&quot;&gt;[[做选择太痛苦了，我想忘掉这一切-&gt;终章-结局D]]&lt;/li&gt;
 &lt;li class=&quot;chapter-action-item&quot;&gt;[[我不在乎，我相信我们终会相遇。-&gt;终章-结局E]]&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="106" name="终章-选宝可梦" tags="" position="2500,825" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="107" name="终章-选宝可梦" tags="" position="2500,825" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
 &lt;&lt;if setup.isFinaleDone()&gt;&gt;
 &lt;&lt;goto &quot;终章-回顾&quot;&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -15932,7 +16468,7 @@ v1.1版本
 &lt;&lt;/if&gt;&gt;
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[返回-&gt;终章-选择]]&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="107" name="终章-结局A" tags="" position="2600,825" size="100,100">&lt;&lt;set _keep to setup.applyFinaleKeepPicks()&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="108" name="终章-结局A" tags="" position="2600,825" size="100,100">&lt;&lt;set _keep to setup.applyFinaleKeepPicks()&gt;&gt;
 &lt;&lt;if not _keep.ok&gt;&gt;
 &lt;&lt;run Dialog.setup(&quot;提示&quot;, &quot;setup-dialog&quot;); Dialog.wiki(_keep.msg); Dialog.open();&gt;&gt;
 &lt;&lt;goto &quot;终章-选宝可梦&quot;&gt;&gt;
@@ -15961,7 +16497,7 @@ v1.1版本
 &lt;ul class=&quot;chapter-action-list&quot;&gt;
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[返回主界面-&gt;主界面]]&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="108" name="终章-结局B确认" tags="" position="2700,825" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="109" name="终章-结局B确认" tags="" position="2700,825" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
 &lt;&lt;if setup.isFinaleDone()&gt;&gt;
 &lt;&lt;goto &quot;终章-回顾&quot;&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -15981,7 +16517,7 @@ v1.1版本
 &lt;li class=&quot;chapter-action-item&quot;&gt;[[接受-&gt;终章-结局B]]&lt;/li&gt;
 &lt;li class=&quot;chapter-action-item&quot;&gt;[[不接受-&gt;终章-结局C]]&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="109" name="终章-结局B" tags="" position="2800,825" size="100,100">&lt;&lt;set _fin to setup.finishFinaleEnding(&quot;B&quot;, &quot;虚弱的梦境&quot;, [&quot;我不想抛弃任何宝可梦&quot;, &quot;接受代价&quot;])&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="110" name="终章-结局B" tags="" position="2800,825" size="100,100">&lt;&lt;set _fin to setup.finishFinaleEnding(&quot;B&quot;, &quot;虚弱的梦境&quot;, [&quot;我不想抛弃任何宝可梦&quot;, &quot;接受代价&quot;])&gt;&gt;
 &lt;div class=&quot;chapter-page&quot;&gt;
 &lt;header class=&quot;chapter-page-header&quot;&gt;
 &lt;h1 class=&quot;chapter-page-title&quot;&gt;结局B：虚弱的梦境&lt;/h1&gt;
@@ -16004,7 +16540,7 @@ v1.1版本
 &lt;ul class=&quot;chapter-action-list&quot;&gt;
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[返回主界面-&gt;主界面]]&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="110" name="终章-结局C" tags="" position="2900,825" size="100,100">&lt;&lt;run setup.clearFinalePokemonBag()&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="111" name="终章-结局C" tags="" position="2900,825" size="100,100">&lt;&lt;run setup.clearFinalePokemonBag()&gt;&gt;
 &lt;&lt;set _fin to setup.finishFinaleEnding(&quot;C&quot;, &quot;化为乌有的现实&quot;, [&quot;我不想抛弃任何宝可梦&quot;, &quot;不接受代价&quot;])&gt;&gt;
 &lt;div class=&quot;chapter-page&quot;&gt;
 &lt;header class=&quot;chapter-page-header&quot;&gt;
@@ -16036,7 +16572,7 @@ v1.1版本
 &lt;ul class=&quot;chapter-action-list&quot;&gt;
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[返回主界面-&gt;主界面]]&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="111" name="终章-结局D" tags="" position="3000,825" size="100,100">&lt;&lt;run setup.clearFinalePokemonBag()&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="112" name="终章-结局D" tags="" position="3000,825" size="100,100">&lt;&lt;run setup.clearFinalePokemonBag()&gt;&gt;
 &lt;&lt;set _fin to setup.finishFinaleEnding(&quot;D&quot;, &quot;遗失之骸&quot;, [&quot;做选择太痛苦了，我想忘掉这一切&quot;])&gt;&gt;
 &lt;div class=&quot;chapter-page&quot;&gt;
 &lt;header class=&quot;chapter-page-header&quot;&gt;
@@ -16064,7 +16600,7 @@ v1.1版本
 &lt;ul class=&quot;chapter-action-list&quot;&gt;
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[返回主界面-&gt;主界面]]&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="112" name="终章-结局E" tags="" position="3100,825" size="100,100">&lt;&lt;run setup.clearFinalePokemonBag()&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="113" name="终章-结局E" tags="" position="3100,825" size="100,100">&lt;&lt;run setup.clearFinalePokemonBag()&gt;&gt;
 &lt;&lt;set _fin to setup.finishFinaleEnding(&quot;E&quot;, &quot;我与你们的链接&quot;, [&quot;我不在乎，我相信我们终会相遇。&quot;])&gt;&gt;
 &lt;div class=&quot;chapter-page&quot;&gt;
 &lt;header class=&quot;chapter-page-header&quot;&gt;
@@ -16091,7 +16627,7 @@ v1.1版本
 &lt;ul class=&quot;chapter-action-list&quot;&gt;
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[返回主界面-&gt;主界面]]&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="113" name="终章-回顾" tags="" position="3200,825" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="114" name="终章-回顾" tags="" position="3200,825" size="100,100">&lt;&lt;run setup.migrateSaveData()&gt;&gt;
 &lt;&lt;if not setup.isFinaleDone()&gt;&gt;
 &lt;&lt;goto &quot;终章&quot;&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -16117,7 +16653,7 @@ v1.1版本
 &lt;ul class=&quot;chapter-action-list&quot;&gt;
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[返回主界面-&gt;主界面]]&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="114" name="密码解锁" tags="" position="100,775" size="100,100">&lt;div class=&quot;chapter-page&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="115" name="密码解锁" tags="" position="100,775" size="100,100">&lt;div class=&quot;chapter-page&quot;&gt;
 &lt;header class=&quot;chapter-page-header&quot;&gt;
 &lt;h1 class=&quot;chapter-page-title&quot;&gt;密码解锁&lt;/h1&gt;
 &lt;/header&gt;
@@ -16135,7 +16671,7 @@ v1.1版本
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[返回-&gt;主界面]]&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="115" name="密码解锁-失败" tags="" position="200,775" size="100,100">&lt;div class=&quot;chapter-page&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="116" name="密码解锁-失败" tags="" position="200,775" size="100,100">&lt;div class=&quot;chapter-page&quot;&gt;
 &lt;header class=&quot;chapter-page-header&quot;&gt;
 &lt;h1 class=&quot;chapter-page-title&quot;&gt;密码错误&lt;/h1&gt;
 &lt;/header&gt;
@@ -16146,6 +16682,110 @@ v1.1版本
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[返回-&gt;主界面]]&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="117" name="常驻事件-找盐粉" tags="" position="2375,75" size="100,100">&lt;&lt;if not $currentEvent&gt;&gt;
+&lt;&lt;goto &quot;主界面&quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;run setup.grantItem(&#39;food_salt&#39;, 1)&gt;&gt;
+
+&lt;div class=&quot;chapter-page&quot;&gt;
+
+&lt;header class=&quot;chapter-page-header&quot;&gt;
+&lt;h1 class=&quot;chapter-page-title&quot;&gt;突发事件&lt;/h1&gt;
+&lt;/header&gt;
+
+&lt;div class=&quot;chapter-page-panel&quot;&gt;
+&lt;span class=&quot;chapter-page-label&quot;&gt;&lt;&lt;print $currentEvent.name&gt;&gt;&lt;/span&gt;
+&lt;p class=&quot;chapter-page-text&quot;&gt;你遇到了一块在太阳下暴晒的岩石，表面结了一层白色的结晶。你刮下来尝了尝，咸咸的……是盐！&lt;/p&gt;
+&lt;p class=&quot;chapter-page-text&quot;&gt;获得了盐粉 × 1。&lt;/p&gt;
+&lt;&lt;if $currentEvent.staminaCost &gt; 0&gt;&gt;
+&lt;p class=&quot;encounter-event-stamina&quot;&gt;*体力-&lt;&lt;print $currentEvent.staminaCost&gt;&gt;&lt;/p&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;/div&gt;
+
+&lt;ul class=&quot;chapter-action-list&quot;&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;
+&lt;&lt;link &quot;返回&quot;&gt;&gt;&lt;&lt;goto setup.getActionReturnPassage()&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="118" name="常驻事件-找仙人掌果" tags="" position="2475,75" size="100,100">&lt;&lt;if not $currentEvent&gt;&gt;
+&lt;&lt;goto &quot;主界面&quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;run setup.grantItem(&#39;food_cactus&#39;, 2)&gt;&gt;
+
+&lt;div class=&quot;chapter-page&quot;&gt;
+
+&lt;header class=&quot;chapter-page-header&quot;&gt;
+&lt;h1 class=&quot;chapter-page-title&quot;&gt;突发事件&lt;/h1&gt;
+&lt;/header&gt;
+
+&lt;div class=&quot;chapter-page-panel&quot;&gt;
+&lt;span class=&quot;chapter-page-label&quot;&gt;&lt;&lt;print $currentEvent.name&gt;&gt;&lt;/span&gt;
+&lt;p class=&quot;chapter-page-text&quot;&gt;炎炎夏日下，竟然还有一些植物在坚持生长。你走近一看，植物身上的果实似乎能吃……&lt;/p&gt;
+&lt;p class=&quot;chapter-page-text&quot;&gt;获得了仙人掌果 × 2。&lt;/p&gt;
+&lt;&lt;if $currentEvent.staminaCost &gt; 0&gt;&gt;
+&lt;p class=&quot;encounter-event-stamina&quot;&gt;*体力-&lt;&lt;print $currentEvent.staminaCost&gt;&gt;&lt;/p&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;/div&gt;
+
+&lt;ul class=&quot;chapter-action-list&quot;&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;
+&lt;&lt;link &quot;返回&quot;&gt;&gt;&lt;&lt;goto setup.getActionReturnPassage()&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="119" name="常驻事件-找冰块" tags="" position="3025,250" size="100,100">&lt;&lt;if not $currentEvent&gt;&gt;
+&lt;&lt;goto &quot;主界面&quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;run setup.grantItem(&#39;food_ice&#39;, 2)&gt;&gt;
+
+&lt;div class=&quot;chapter-page&quot;&gt;
+
+&lt;header class=&quot;chapter-page-header&quot;&gt;
+&lt;h1 class=&quot;chapter-page-title&quot;&gt;突发事件&lt;/h1&gt;
+&lt;/header&gt;
+
+&lt;div class=&quot;chapter-page-panel&quot;&gt;
+&lt;span class=&quot;chapter-page-label&quot;&gt;&lt;&lt;print $currentEvent.name&gt;&gt;&lt;/span&gt;
+&lt;p class=&quot;chapter-page-text&quot;&gt;附近的植物都被冻成了冰块雕像。你使劲敲了敲，掉下来了几块小冰块……当冰水喝也不错呢。&lt;/p&gt;
+&lt;p class=&quot;chapter-page-text&quot;&gt;获得了冰块 × 2。&lt;/p&gt;
+&lt;&lt;if $currentEvent.staminaCost &gt; 0&gt;&gt;
+&lt;p class=&quot;encounter-event-stamina&quot;&gt;*体力-&lt;&lt;print $currentEvent.staminaCost&gt;&gt;&lt;/p&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;/div&gt;
+
+&lt;ul class=&quot;chapter-action-list&quot;&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;
+&lt;&lt;link &quot;返回&quot;&gt;&gt;&lt;&lt;goto setup.getActionReturnPassage()&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="120" name="常驻事件-找牛奶" tags="" position="3125,250" size="100,100">&lt;&lt;if not $currentEvent&gt;&gt;
+&lt;&lt;goto &quot;主界面&quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;run setup.grantItem(&#39;food_milk&#39;, 1)&gt;&gt;
+
+&lt;div class=&quot;chapter-page&quot;&gt;
+
+&lt;header class=&quot;chapter-page-header&quot;&gt;
+&lt;h1 class=&quot;chapter-page-title&quot;&gt;突发事件&lt;/h1&gt;
+&lt;/header&gt;
+
+&lt;div class=&quot;chapter-page-panel&quot;&gt;
+&lt;span class=&quot;chapter-page-label&quot;&gt;&lt;&lt;print $currentEvent.name&gt;&gt;&lt;/span&gt;
+&lt;p class=&quot;chapter-page-text&quot;&gt;虽然整座岛的河流几乎都被薄薄的冰覆盖，但是还是有部分区域被宝可梦们打开过。你舔了舔，牛奶味的……&lt;/p&gt;
+&lt;p class=&quot;chapter-page-text&quot;&gt;获得了牛奶 × 1。&lt;/p&gt;
+&lt;&lt;if $currentEvent.staminaCost &gt; 0&gt;&gt;
+&lt;p class=&quot;encounter-event-stamina&quot;&gt;*体力-&lt;&lt;print $currentEvent.staminaCost&gt;&gt;&lt;/p&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;/div&gt;
+
+&lt;ul class=&quot;chapter-action-list&quot;&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;
+&lt;&lt;link &quot;返回&quot;&gt;&gt;&lt;&lt;goto setup.getActionReturnPassage()&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;/div&gt;</tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */
