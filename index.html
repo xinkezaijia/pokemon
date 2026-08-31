@@ -4960,7 +4960,8 @@ setup.initGameData = function () {
 	setup.bonfireCost = {
 		mat_wood: 5,
 		mat_cloth: 4,
-		mat_berry: 10
+		mat_berry: 10,
+		item_pearl: 1
 	};
 
 	setup.itemDefs = {};
@@ -5075,6 +5076,44 @@ setup.initGameData = function () {
 		{ id: 'berry_pie', name: '浆果派', price: 400, type: 'item' },
 		{ id: 'cave_glasses', name: '探窟眼镜', price: 100, type: 'tool' },
 		{ id: 'glasses_recharge', name: '探窟眼镜充满', price: 100, type: 'service' }
+	];
+
+	setup.craftCatalog = [
+		{
+			id: 'craft_master_ball',
+			name: '大师球',
+			failRate: 50,
+			cost: { jinlinqiu: 5, chaojiqiu: 4, mat_berry: 1 },
+			rewardBall: 'dashiqiu'
+		},
+		{
+			id: 'craft_dive_ball',
+			name: '潜水球',
+			failRate: 30,
+			cost: { jinlinqiu: 4, chaojiqiu: 1, food_kelp: 2 },
+			rewardBall: 'qianshuiqiu'
+		},
+		{
+			id: 'craft_weight_ball',
+			name: '承重球',
+			failRate: 40,
+			cost: { jinlinqiu: 4, chaojiqiu: 2, food_meat_jerky: 2 },
+			rewardBall: 'chengzhongqiu'
+		},
+		{
+			id: 'craft_fake_shiny_charm',
+			name: '盗版闪耀护符',
+			failRate: 10,
+			cost: { item_pearl: 5, food_kelp: 2, mat_cloth: 2, mat_iron: 1, mat_pillar: 1 },
+			rewardCharm: true
+		},
+		{
+			id: 'craft_glasses_upgrade',
+			name: '升级洞窟眼镜',
+			failRate: 10,
+			cost: { mat_iron: 2, mat_cloth: 2, chaojiqiu: 1 },
+			rewardGlassesUpgrade: true
+		}
 	];
 
 	setup.ingredientCategories = {
@@ -5693,7 +5732,8 @@ setup.initGameData = function () {
 				mat_carpet: 5,
 				fur_wood_table: 1,
 				fur_pikachu_sofa: 2,
-				fur_plastic_chair: 4
+				fur_plastic_chair: 4,
+				item_pearl: 2
 			},
 			achievement: 'ach_rest_lv5',
 			staminaBonus: 25
@@ -6154,6 +6194,13 @@ setup.randomPokemon = function (poolIdList) {
 	}
 	if (!pool.length) {
 		return null;
+	}
+	roll = random(1, 100);
+	if (State.variables.hasFakeShinyCharm && roll <= 90) {
+		filtered = pool.filter(function (p) { return p.rarity === 'shiny'; });
+		if (filtered.length) {
+			return filtered[random(0, filtered.length - 1)];
+		}
 	}
 	roll = random(1, 100);
 	if (roll <= 1) {
@@ -7833,10 +7880,30 @@ setup.applyStaminaCost = function (amount) {
 };
 
 setup.getCaptureSuccessRate = function (ballId, mon) {
-	var rates = setup.captureRates[ballId];
+	var v = State.variables;
+	var rates;
 	var base;
 	var buff;
-	if (!rates || !mon) {
+	if (!mon) {
+		return 0;
+	}
+	if (ballId === 'dashiqiu') {
+		return 1;
+	}
+	if (ballId === 'qianshuiqiu') {
+		if (v.actionMode === 'salvage') {
+			return 0.9;
+		}
+		rates = setup.captureRates.chaojiqiu;
+	} else if (ballId === 'chengzhongqiu') {
+		if (v.actionMode === 'cave') {
+			return 0.9;
+		}
+		rates = setup.captureRates.chaojiqiu;
+	} else {
+		rates = setup.captureRates[ballId];
+	}
+	if (!rates) {
 		return 0;
 	}
 	base = (mon.shiny ? rates.shiny : rates.normal) / 10;
@@ -9027,6 +9094,18 @@ setup.migrateSaveData = function () {
 	}
 	if (v.wooperRescueSpotCounts == null) {
 		v.wooperRescueSpotCounts = {};
+	}
+	if (v.dashiqiu == null) {
+		v.dashiqiu = 0;
+	}
+	if (v.qianshuiqiu == null) {
+		v.qianshuiqiu = 0;
+	}
+	if (v.chengzhongqiu == null) {
+		v.chengzhongqiu = 0;
+	}
+	if (v.hasFakeShinyCharm == null) {
+		v.hasFakeShinyCharm = false;
 	}
 	if (v.islandDiveSuccess && !v.islandDiveChestClaimed && !v.islandDiveWinningChest) {
 		v.islandDiveWinningChest = random(1, 3);
@@ -10379,6 +10458,143 @@ setup.startBonfire = function () {
 	};
 };
 
+setup.getCraftMaterialName = function (id) {
+	if (id === 'jinlinqiu') {
+		return '精灵球';
+	}
+	if (id === 'chaojiqiu') {
+		return '超级球';
+	}
+	return setup.itemDefs[id] ? setup.itemDefs[id].name : id;
+};
+
+setup.getCraftMaterialCount = function (id) {
+	var v = State.variables;
+	if (id === 'jinlinqiu' || id === 'chaojiqiu') {
+		return v[id] || 0;
+	}
+	return v.itemBag[id] || 0;
+};
+
+setup.consumeCraftMaterial = function (id, count) {
+	var v = State.variables;
+	if (id === 'jinlinqiu' || id === 'chaojiqiu') {
+		v[id] = (v[id] || 0) - count;
+		if (v[id] <= 0) {
+			v[id] = 0;
+		}
+		return;
+	}
+	v.itemBag[id] -= count;
+	if (v.itemBag[id] <= 0) {
+		delete v.itemBag[id];
+	}
+};
+
+setup.getCraftRecipe = function (recipeId) {
+	var i;
+	for (i = 0; i < setup.craftCatalog.length; i++) {
+		if (setup.craftCatalog[i].id === recipeId) {
+			return setup.craftCatalog[i];
+		}
+	}
+	return null;
+};
+
+setup.listCraftMaterials = function (recipe) {
+	var list = [];
+	var id;
+	if (!recipe || !recipe.cost) {
+		return list;
+	}
+	for (id in recipe.cost) {
+		if (Object.prototype.hasOwnProperty.call(recipe.cost, id)) {
+			list.push({
+				id: id,
+				name: setup.getCraftMaterialName(id),
+				need: recipe.cost[id],
+				have: setup.getCraftMaterialCount(id)
+			});
+		}
+	}
+	return list;
+};
+
+setup.canCraft = function (recipeId) {
+	var recipe = setup.getCraftRecipe(recipeId);
+	var v = State.variables;
+	var id;
+	var need;
+	var have;
+	if (!recipe) {
+		return { ok: false, msg: '无效的合成配方。' };
+	}
+	if (!setup.isChapterUnlocked('ch2')) {
+		return { ok: false, msg: '第二章尚未开启。' };
+	}
+	if (recipe.rewardGlassesUpgrade) {
+		if (!v.hasCaveGlasses) {
+			return { ok: false, msg: '需要先拥有探窟眼镜。' };
+		}
+		if (v.glassesMax >= 100) {
+			return { ok: false, msg: '探窟眼镜能量上限已达100，无法继续升级。' };
+		}
+	}
+	for (id in recipe.cost) {
+		if (Object.prototype.hasOwnProperty.call(recipe.cost, id)) {
+			need = recipe.cost[id];
+			have = setup.getCraftMaterialCount(id);
+			if (have < need) {
+				return {
+					ok: false,
+					msg: '材料不足：' + setup.getCraftMaterialName(id)
+						+ ' 需要 ' + need + '，当前 ' + have + '。'
+				};
+			}
+		}
+	}
+	return { ok: true, msg: '' };
+};
+
+setup.doCraft = function (recipeId) {
+	var v = State.variables;
+	var recipe = setup.getCraftRecipe(recipeId);
+	var check = setup.canCraft(recipeId);
+	var id;
+	if (!check.ok) {
+		return { ok: false, success: false, msg: check.msg };
+	}
+	for (id in recipe.cost) {
+		if (Object.prototype.hasOwnProperty.call(recipe.cost, id)) {
+			setup.consumeCraftMaterial(id, recipe.cost[id]);
+		}
+	}
+	if (random(1, 100) <= recipe.failRate) {
+		return { ok: true, success: false, msg: '合成失败了……材料全部消耗掉了。' };
+	}
+	if (recipe.rewardBall) {
+		v[recipe.rewardBall] = (v[recipe.rewardBall] || 0) + 1;
+	}
+	if (recipe.rewardCharm) {
+		v.hasFakeShinyCharm = true;
+	}
+	if (recipe.rewardGlassesUpgrade) {
+		var add = Math.min(20, 100 - v.glassesMax);
+		v.glassesMax += add;
+		v.glassesEnergy += add;
+		if (v.glassesEnergy > v.glassesMax) {
+			v.glassesEnergy = v.glassesMax;
+		}
+		return {
+			ok: true,
+			success: true,
+			msg: '合成成功！探窟眼镜能量上限提升至' + v.glassesMax
+				+ '（当前' + v.glassesEnergy + '/' + v.glassesMax + '）。'
+		};
+	}
+	return { ok: true, success: true, msg: '合成成功！获得了' + recipe.name + '。' };
+};
+
 setup.canPerformChapterAction = function () {
 	var v = State.variables;
 	if (v.tili <= 0) {
@@ -11080,6 +11296,21 @@ setup.tryCapture = function (ballId) {
 			return { ok: false, msg: '超级球不足。' };
 		}
 		ballName = '超级球';
+	} else if (ballId === 'dashiqiu') {
+		if ((v.dashiqiu || 0) <= 0) {
+			return { ok: false, msg: '大师球不足。' };
+		}
+		ballName = '大师球';
+	} else if (ballId === 'qianshuiqiu') {
+		if ((v.qianshuiqiu || 0) <= 0) {
+			return { ok: false, msg: '潜水球不足。' };
+		}
+		ballName = '潜水球';
+	} else if (ballId === 'chengzhongqiu') {
+		if ((v.chengzhongqiu || 0) <= 0) {
+			return { ok: false, msg: '承重球不足。' };
+		}
+		ballName = '承重球';
 	} else {
 		return { ok: false, msg: '无效的球。' };
 	}
@@ -11092,6 +11323,9 @@ setup.tryCapture = function (ballId) {
 		setup.trackCatchSuccess(1);
 		if (pokedexKey) {
 			v.pokedex[pokedexKey] = 'caught';
+		}
+		if (mon.shiny && v.hasFakeShinyCharm) {
+			v.hasFakeShinyCharm = false;
 		}
 		v.encounterMon = null;
 		if (ballId === 'jinlinqiu' || ballId === 'chaojiqiu') {
@@ -11728,6 +11962,7 @@ setup.sceneThemeGlobalPassages = {
 	'学分商店购买数量': true,
 	'学分商店购买确认': true,
 	'学分商店购买完成': true,
+	'学分商店合成': true,
 	'休息区域': true,
 	'休息区-逛逛': true,
 	'烹饪': true,
@@ -12063,6 +12298,10 @@ v1.1版本
 &lt;&lt;set $xuefen to 100&gt;&gt;//学分
 &lt;&lt;set $jinlinqiu to 0&gt;&gt;//精灵球
 &lt;&lt;set $chaojiqiu to 0&gt;&gt;//超级球
+&lt;&lt;set $dashiqiu to 0&gt;&gt;//大师球
+&lt;&lt;set $qianshuiqiu to 0&gt;&gt;//潜水球
+&lt;&lt;set $chengzhongqiu to 0&gt;&gt;//承重球
+&lt;&lt;set $hasFakeShinyCharm to false&gt;&gt;//盗版闪耀护符
 &lt;&lt;set $tili to 10&gt;&gt;//当前体力
 &lt;&lt;set $tiliMax to 10&gt;&gt;//体力上限
 &lt;&lt;set $pokedex to {}&gt;&gt;//图鉴 { speciesKey: &quot;seen&quot;|&quot;caught&quot; }，同物种合并、异色单独
@@ -12101,7 +12340,7 @@ v1.1版本
 &lt;&lt;set $pendingPurchasePrice to 0&gt;&gt;//待购总价
 &lt;&lt;set $encounterMon to null&gt;&gt;//当前遇怪宝可梦
 &lt;&lt;set $actionMode to &quot;&quot;&gt;&gt;//explore / salvage
-&lt;&lt;set $captureBall to &quot;&quot;&gt;&gt;//jinlinqiu / chaojiqiu
+&lt;&lt;set $captureBall to &quot;&quot;&gt;&gt;//jinlinqiu / chaojiqiu / dashiqiu / qianshuiqiu / chengzhongqiu
 &lt;&lt;set $currentEvent to null&gt;&gt;//当前突发事件
 &lt;&lt;set $chapterKey to &quot;&quot;&gt;&gt;//当前章节键 ch1/ch2/ch3
 &lt;&lt;set $chapterHub to &quot;&quot;&gt;&gt;//当前章节 hub passage 名
@@ -12618,6 +12857,9 @@ v1.1版本
 &lt;&lt;if $shopOpen&gt;&gt;
 &lt;li class=&quot;chapter-action-item chapter-action-item--buy&quot;&gt;[[购买商品-&gt;学分商店购买]]&lt;/li&gt;
 &lt;&lt;/if&gt;&gt;
+&lt;&lt;if setup.isChapterUnlocked('ch2')&gt;&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--buy&quot;&gt;[[合成-&gt;学分商店合成]]&lt;/li&gt;
+&lt;&lt;/if&gt;&gt;
 &lt;/ul&gt;
 &lt;&lt;if not $shopOpen&gt;&gt;
 &lt;p class=&quot;chapter-hub-notice&quot;&gt;修复中哔哔……寻找信号哔……&lt;/p&gt;
@@ -12924,6 +13166,40 @@ v1.1版本
 &lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[返回学分商店-&gt;学分商店]]&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="18a" name="学分商店合成" tags="" position="475,850" size="100,100">&lt;&lt;if not setup.isChapterUnlocked('ch2')&gt;&gt;
+&lt;&lt;goto &quot;学分商店&quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+
+&lt;div class=&quot;chapter-page chapter-page--wide&quot;&gt;
+
+&lt;header class=&quot;chapter-page-header&quot;&gt;
+&lt;h1 class=&quot;chapter-page-title&quot;&gt;合成&lt;/h1&gt;
+&lt;/header&gt;
+
+&lt;div class=&quot;chapter-page-panel&quot;&gt;
+&lt;ul class=&quot;chapter-action-list&quot;&gt;
+&lt;&lt;for _recipe range setup.craftCatalog&gt;&gt;
+&lt;&lt;capture _recipe&gt;&gt;
+&lt;&lt;set _craftMats to setup.listCraftMaterials(_recipe)&gt;&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--buy has-cost&quot;&gt;
+&lt;&lt;link &quot;&lt;&lt;print _recipe.name&gt;&gt;&quot;&gt;&gt;
+	&lt;&lt;set _craftResult to setup.doCraft(_recipe.id)&gt;&gt;
+	&lt;&lt;run Dialog.setup(&quot;合成&quot;, &quot;setup-dialog&quot;); Dialog.wiki(_craftResult.msg); Dialog.open();&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;span class=&quot;chapter-action-cost&quot;&gt;失败率 &lt;&lt;print _recipe.failRate&gt;&gt;%&lt;/span&gt;
+&lt;/li&gt;
+&lt;&lt;for _mat range _craftMats&gt;&gt;
+&lt;p class=&quot;chapter-page-text&quot;&gt;&lt;&lt;print _mat.name&gt;&gt;：&lt;&lt;print _mat.have&gt;&gt; / &lt;&lt;print _mat.need&gt;&gt;&lt;/p&gt;
+&lt;&lt;/for&gt;&gt;
+&lt;&lt;/capture&gt;&gt;
+&lt;&lt;/for&gt;&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;ul class=&quot;chapter-action-list&quot;&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--back&quot;&gt;[[返回学分商店-&gt;学分商店]]&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="19" name="故事的开始" tags="" position="1175,350" size="100,100">&lt;&lt;if not $nameSet&gt;&gt;
 &lt;&lt;goto &quot;序章取名&quot;&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -13149,7 +13425,7 @@ v1.1版本
 &lt;&lt;set _flavor to setup.randomEncounterFlavor($actionMode)&gt;&gt;
 &lt;p class=&quot;chapter-page-text&quot;&gt;&lt;&lt;printHtml setup.formatEncounterText($encounterMon, $actionMode, _flavor)&gt;&gt;&lt;/p&gt;
 
-&lt;&lt;if $jinlinqiu &lt;= 0 and $chaojiqiu &lt;= 0&gt;&gt;
+&lt;&lt;if $jinlinqiu &lt;= 0 and $chaojiqiu &lt;= 0 and ($dashiqiu || 0) &lt;= 0 and ($qianshuiqiu || 0) &lt;= 0 and ($chengzhongqiu || 0) &lt;= 0&gt;&gt;
 &lt;p class=&quot;chapter-page-text&quot;&gt;你没有可用的精灵球了……&lt;/p&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;/div&gt;
@@ -13167,6 +13443,30 @@ v1.1版本
 &lt;li class=&quot;chapter-action-item chapter-action-item--capture-super&quot;&gt;
 &lt;&lt;link &quot;使用超级球捕捉&quot;&gt;&gt;
 	&lt;&lt;set $captureBall to &quot;chaojiqiu&quot;&gt;&gt;
+	&lt;&lt;goto &quot;第一章捕捉结果&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if ($dashiqiu || 0) &gt; 0&gt;&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--capture-super&quot;&gt;
+&lt;&lt;link &quot;使用大师球捕捉&quot;&gt;&gt;
+	&lt;&lt;set $captureBall to &quot;dashiqiu&quot;&gt;&gt;
+	&lt;&lt;goto &quot;第一章捕捉结果&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if ($qianshuiqiu || 0) &gt; 0&gt;&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--capture-super&quot;&gt;
+&lt;&lt;link &quot;使用潜水球捕捉&quot;&gt;&gt;
+	&lt;&lt;set $captureBall to &quot;qianshuiqiu&quot;&gt;&gt;
+	&lt;&lt;goto &quot;第一章捕捉结果&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if ($chengzhongqiu || 0) &gt; 0&gt;&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--capture-super&quot;&gt;
+&lt;&lt;link &quot;使用承重球捕捉&quot;&gt;&gt;
+	&lt;&lt;set $captureBall to &quot;chengzhongqiu&quot;&gt;&gt;
 	&lt;&lt;goto &quot;第一章捕捉结果&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 &lt;/li&gt;
@@ -13565,7 +13865,7 @@ v1.1版本
 &lt;p class=&quot;chapter-page-text&quot;&gt;探窟眼镜剩余能量：&lt;&lt;print $glassesEnergy&gt;&gt;/&lt;&lt;print $glassesMax&gt;&gt;&lt;/p&gt;
 &lt;&lt;/if&gt;&gt;
 
-&lt;&lt;if $jinlinqiu &lt;= 0 and $chaojiqiu &lt;= 0&gt;&gt;
+&lt;&lt;if $jinlinqiu &lt;= 0 and $chaojiqiu &lt;= 0 and ($dashiqiu || 0) &lt;= 0 and ($qianshuiqiu || 0) &lt;= 0 and ($chengzhongqiu || 0) &lt;= 0&gt;&gt;
 &lt;p class=&quot;chapter-page-text&quot;&gt;你没有可用的精灵球了……&lt;/p&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;/div&gt;
@@ -13583,6 +13883,30 @@ v1.1版本
 &lt;li class=&quot;chapter-action-item chapter-action-item--capture-super&quot;&gt;
 &lt;&lt;link &quot;使用超级球捕捉&quot;&gt;&gt;
 	&lt;&lt;set $captureBall to &quot;chaojiqiu&quot;&gt;&gt;
+	&lt;&lt;goto &quot;章节捕捉结果&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if ($dashiqiu || 0) &gt; 0&gt;&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--capture-super&quot;&gt;
+&lt;&lt;link &quot;使用大师球捕捉&quot;&gt;&gt;
+	&lt;&lt;set $captureBall to &quot;dashiqiu&quot;&gt;&gt;
+	&lt;&lt;goto &quot;章节捕捉结果&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if ($qianshuiqiu || 0) &gt; 0&gt;&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--capture-super&quot;&gt;
+&lt;&lt;link &quot;使用潜水球捕捉&quot;&gt;&gt;
+	&lt;&lt;set $captureBall to &quot;qianshuiqiu&quot;&gt;&gt;
+	&lt;&lt;goto &quot;章节捕捉结果&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if ($chengzhongqiu || 0) &gt; 0&gt;&gt;
+&lt;li class=&quot;chapter-action-item chapter-action-item--capture-super&quot;&gt;
+&lt;&lt;link &quot;使用承重球捕捉&quot;&gt;&gt;
+	&lt;&lt;set $captureBall to &quot;chengzhongqiu&quot;&gt;&gt;
 	&lt;&lt;goto &quot;章节捕捉结果&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 &lt;/li&gt;
