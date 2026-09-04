@@ -4989,6 +4989,7 @@ setup.initGameData = function () {
 	setup.itemDefs.food_milk = { name: '牛奶', type: 'food', staminaRestore: 2, ingredientCat: 'dairy' };
 	setup.itemDefs.food_meat_jerky = { name: '小份肉干', type: 'food', staminaRestore: 5 };
 	setup.itemDefs.item_pearl = { name: '珍珠', type: 'material' };
+	setup.itemDefs.item_fake_shiny_charm = { name: '盗版闪耀护符', type: 'charm' };
 	setup.itemDefs.fur_wood_table = { name: '木桌子', type: 'material' };
 	setup.itemDefs.fur_pikachu_sofa = { name: '皮卡丘沙发', type: 'material' };
 	setup.itemDefs.fur_plastic_chair = { name: '塑料椅子', type: 'material' };
@@ -5679,9 +5680,11 @@ setup.initGameData = function () {
 
 	setup.PROB_NONE = 35;
 
-	setup.CAVE_FOSSIL_IN_NONE_CHANCE = 5;
-
 	setup.PROB_BLANK = 40;
+
+	setup.FOSSIL_CAVE_CELL_MAX = 50;
+	setup.SHINY_PITY_GUARANTEE = 120;
+	setup.SHINY_PITY_NO_NATURAL = 50;
 
 
 	setup.restAreaLevels = [
@@ -6183,10 +6186,92 @@ setup.initEntertainData = function () {
 	};
 };
 
-setup.randomPokemon = function (poolIdList) {
+setup.ensureShinyPity = function () {
+	var v = State.variables;
+	if (!v.shinyPity) {
+		v.shinyPity = {
+			ch1: { explore: 0, salvage: 0, cave: 0 },
+			ch2: { explore: 0, salvage: 0, cave: 0 },
+			ch3: { explore: 0, salvage: 0, cave: 0 }
+		};
+	}
+};
+
+setup.getShinyPity = function (chapterKey, mode) {
+	var bucket;
+	setup.ensureShinyPity();
+	bucket = State.variables.shinyPity[chapterKey];
+	if (!bucket || bucket[mode] == null) {
+		return 0;
+	}
+	return bucket[mode];
+};
+
+setup.bumpShinyPity = function (chapterKey, mode) {
+	var v = State.variables;
+	var bucket;
+	setup.ensureShinyPity();
+	if (!chapterKey || !mode || !v.shinyPity[chapterKey]) {
+		return;
+	}
+	bucket = v.shinyPity[chapterKey];
+	if (bucket[mode] == null) {
+		bucket[mode] = 0;
+	}
+	bucket[mode] += 1;
+};
+
+setup.resetShinyPity = function (chapterKey, mode) {
+	setup.ensureShinyPity();
+	if (State.variables.shinyPity[chapterKey]) {
+		State.variables.shinyPity[chapterKey][mode] = 0;
+	}
+};
+
+setup.pickShinyFromPool = function (pool) {
+	var filtered = pool.filter(function (p) { return p.rarity === 'shiny'; });
+	if (!filtered.length) {
+		return null;
+	}
+	return filtered[random(0, filtered.length - 1)];
+};
+
+setup.grantFossilFind = function () {
+	var amount = 1;
+	if (setup.getPartnerBuffId() === 'item_double') {
+		amount = 2;
+	}
+	setup.addItemToBag('item_fossil', amount);
+	return {
+		ok: true,
+		type: 'fossil',
+		msg: '在探索的过程中好像发现了什么类似于宝可梦化石一样的东西…\n获得：化石×' + amount
+	};
+};
+
+setup.onCaveEntry = function (chapterKey) {
+	setup.bumpShinyPity(chapterKey, 'cave');
+};
+
+setup.bumpFossilCaveCell = function () {
+	var v = State.variables;
+	if (v.fossilCaveCellCount == null) {
+		v.fossilCaveCellCount = 0;
+	}
+	v.fossilCaveCellCount += 1;
+	if (v.fossilCaveCellCount >= setup.FOSSIL_CAVE_CELL_MAX) {
+		v.fossilCaveCellCount = 0;
+		v.pendingCaveFossil = true;
+	}
+};
+
+setup.randomPokemon = function (poolIdList, chapterKey, mode) {
+	var v = State.variables;
 	var pool = setup.pokemonList;
 	var roll;
 	var filtered;
+	var pity;
+	var shinyMon;
 	if (poolIdList && poolIdList.length) {
 		pool = poolIdList.map(function (id) {
 			return setup.pokemonById[id];
@@ -6195,21 +6280,36 @@ setup.randomPokemon = function (poolIdList) {
 	if (!pool.length) {
 		return null;
 	}
-	roll = random(1, 100);
-	if (State.variables.hasFakeShinyCharm && roll <= 90) {
-		filtered = pool.filter(function (p) { return p.rarity === 'shiny'; });
-		if (filtered.length) {
-			return filtered[random(0, filtered.length - 1)];
+	pity = (chapterKey && mode) ? setup.getShinyPity(chapterKey, mode) : 0;
+	if (pity >= setup.SHINY_PITY_GUARANTEE) {
+		shinyMon = setup.pickShinyFromPool(pool);
+		if (shinyMon) {
+			setup.resetShinyPity(chapterKey, mode);
+			return shinyMon;
+		}
+	}
+	if (v.fakeShinyCharmActive) {
+		roll = random(1, 100);
+		if (roll <= 90) {
+			shinyMon = setup.pickShinyFromPool(pool);
+			if (shinyMon) {
+				setup.resetShinyPity(chapterKey, mode);
+				return shinyMon;
+			}
+		}
+	}
+	if (pity > setup.SHINY_PITY_NO_NATURAL) {
+		roll = random(1, 100);
+		if (roll <= 1) {
+			shinyMon = setup.pickShinyFromPool(pool);
+			if (shinyMon) {
+				setup.resetShinyPity(chapterKey, mode);
+				return shinyMon;
+			}
 		}
 	}
 	roll = random(1, 100);
-	if (roll <= 1) {
-		filtered = pool.filter(function (p) { return p.rarity === 'shiny'; });
-		if (filtered.length) {
-			return filtered[random(0, filtered.length - 1)];
-		}
-	}
-	if (roll <= 16) {
+	if (roll <= 15) {
 		filtered = pool.filter(function (p) { return p.rarity === 'rare'; });
 		if (filtered.length) {
 			return filtered[random(0, filtered.length - 1)];
@@ -7492,19 +7592,6 @@ setup.formatPartnerBondText = function (text, mon) {
 };
 
 setup.resolveNoneActionResult = function (chapterKey, mode) {
-	var amount;
-	if (mode === 'cave' && random(1, 100) <= setup.CAVE_FOSSIL_IN_NONE_CHANCE) {
-		amount = 1;
-		if (setup.getPartnerBuffId() === 'item_double') {
-			amount = 2;
-		}
-		setup.addItemToBag('item_fossil', amount);
-		return {
-			ok: true,
-			type: 'fossil',
-			msg: '在探索的过程中好像发现了什么类似于宝可梦化石一样的东西…\n获得：化石×' + amount
-		};
-	}
 	return { ok: true, type: 'none' };
 };
 
@@ -8199,6 +8286,7 @@ setup.tryCaveGridCell = function (cellIndex) {
 	setup.applyStaminaCost(1);
 	v.caveRunDepth = (v.caveRunDepth || 0) + 1;
 	setup.trackWeeklyProgress('ch2', 'cave_cells', 1);
+	setup.bumpFossilCaveCell();
 	return {
 		ok: true,
 		staminaCost: setup.previewStaminaCost(1),
@@ -8231,10 +8319,16 @@ setup.spendCaveGlassesEnergy = function () {
 };
 
 setup.rollCaveEncounter = function (chapterKey) {
+	var v = State.variables;
 	var roll;
 	var pool;
 	var mon;
 	var ev;
+	if (v.pendingCaveFossil) {
+		v.pendingCaveFossil = false;
+		setup.spendCaveGlassesEnergy();
+		return setup.grantFossilFind();
+	}
 	roll = random(1, 100);
 	if (roll <= setup.PROB_NONE) {
 		return setup.resolveNoneActionResult(chapterKey, 'cave');
@@ -8271,7 +8365,7 @@ setup.rollCaveEncounter = function (chapterKey) {
 	pool = setup.chapterPokemon[chapterKey] && setup.chapterPokemon[chapterKey].cave
 		? setup.chapterPokemon[chapterKey].cave
 		: null;
-	mon = setup.randomPokemon(pool);
+	mon = setup.randomPokemon(pool, chapterKey, 'cave');
 	if (!mon) {
 		return { ok: false, msg: '该区域的宝可梦数据尚未配置。' };
 	}
@@ -8364,13 +8458,93 @@ setup.getBadgeExchangeState = function (item) {
 	return { ok: true, claimed: false, locked: false, msg: '' };
 };
 
+setup.countShinyInBag = function () {
+	var bag = State.variables.pokemonBag || [];
+	var i;
+	var n = 0;
+	for (i = 0; i < bag.length; i++) {
+		if (bag[i] && bag[i].shiny) {
+			n += 1;
+		}
+	}
+	return n;
+};
+
+setup.getCharmExchangeLimit = function () {
+	var n = setup.countShinyInBag();
+	if (n > 5) {
+		return 0;
+	}
+	if (n <= 1) {
+		return 5;
+	}
+	return 3;
+};
+
+setup.showCharmExchangeSection = function () {
+	return setup.getCharmExchangeLimit() > 0;
+};
+
+setup.getCharmExchangeState = function () {
+	var v = State.variables;
+	var claimed = v.exchangeCharmClaimCount || 0;
+	var limit = setup.getCharmExchangeLimit();
+	if (limit === 0) {
+		return { ok: false, msg: '背包异色数量过多，无法领取。', limit: 0, claimed: claimed };
+	}
+	if (claimed >= limit) {
+		return {
+			ok: false,
+			msg: '领取次数已用完（' + claimed + '/' + limit + '）。',
+			limit: limit,
+			claimed: claimed
+		};
+	}
+	return {
+		ok: true,
+		msg: '',
+		limit: limit,
+		claimed: claimed,
+		remaining: limit - claimed
+	};
+};
+
+setup.useFakeShinyCharm = function () {
+	var v = State.variables;
+	if ((v.itemBag.item_fake_shiny_charm || 0) <= 0) {
+		return { ok: false, msg: '背包里没有盗版闪耀护符。' };
+	}
+	if (v.fakeShinyCharmActive) {
+		return { ok: false, msg: '盗版闪耀护符已经启用了。' };
+	}
+	setup.removeItemFromBag('item_fake_shiny_charm', 1);
+	v.fakeShinyCharmActive = true;
+	return { ok: true, msg: '你启用了盗版闪耀护符！' };
+};
+
 setup.completePendingExchange = function () {
 	var v = State.variables;
-	var credits = Number(v.pendingExchangeCredits) || 0;
+	var credits;
 	var id = v.pendingExchangeId;
 	var state;
 	var item;
 	var i;
+	if (v.pendingExchangeKind === 'charm') {
+		state = setup.getCharmExchangeState();
+		if (!state.ok) {
+			v.pendingExchangeCredits = 0;
+			v.pendingExchangeId = '';
+			v.pendingExchangeKind = '';
+			return { ok: false, msg: state.msg || '无法领取。', credits: 0 };
+		}
+		setup.grantItem('item_fake_shiny_charm', 1);
+		v.exchangeCharmClaimCount = (v.exchangeCharmClaimCount || 0) + 1;
+		v.pendingExchangeCredits = 0;
+		v.pendingExchangeId = '';
+		v.pendingExchangeKind = '';
+		return { ok: true, msg: '领取成功！获得了盗版闪耀护符。', credits: 0 };
+	}
+	credits = Number(v.pendingExchangeCredits) || 0;
 	if (credits <= 0) {
 		return { ok: false, msg: '没有待结算的兑换。', credits: 0 };
 	}
@@ -9107,6 +9281,19 @@ setup.migrateSaveData = function () {
 	if (v.hasFakeShinyCharm == null) {
 		v.hasFakeShinyCharm = false;
 	}
+	if (v.fakeShinyCharmActive == null) {
+		v.fakeShinyCharmActive = v.hasFakeShinyCharm === true;
+	}
+	if (v.fossilCaveCellCount == null) {
+		v.fossilCaveCellCount = 0;
+	}
+	if (v.pendingCaveFossil == null) {
+		v.pendingCaveFossil = false;
+	}
+	if (v.exchangeCharmClaimCount == null) {
+		v.exchangeCharmClaimCount = 0;
+	}
+	setup.ensureShinyPity();
 	if (v.islandDiveSuccess && !v.islandDiveChestClaimed && !v.islandDiveWinningChest) {
 		v.islandDiveWinningChest = random(1, 3);
 	}
@@ -9439,6 +9626,7 @@ setup.doSalvageAction = function (chapterKey) {
 	}
 	setup.tickTempStaminaCap3();
 	v.salvageCount = (v.salvageCount || 0) + 1;
+	setup.bumpShinyPity(chapterKey, 'salvage');
 	setup.checkSalvageCountAchievements();
 	setup.trackSalvageLife(1);
 	setup.trackWeeklyProgress(chapterKey, 'salvage', 1);
@@ -9470,7 +9658,7 @@ setup.doSalvageAction = function (chapterKey) {
 		pool = setup.chapterPokemon[chapterKey] && setup.chapterPokemon[chapterKey].salvage
 			? setup.chapterPokemon[chapterKey].salvage
 			: null;
-		mon = setup.randomPokemon(pool);
+		mon = setup.randomPokemon(pool, chapterKey, 'salvage');
 		if (!mon) {
 			return { ok: false, msg: '该区域并没有其他宝可梦。' };
 		}
@@ -10576,7 +10764,7 @@ setup.doCraft = function (recipeId) {
 		v[recipe.rewardBall] = (v[recipe.rewardBall] || 0) + 1;
 	}
 	if (recipe.rewardCharm) {
-		v.hasFakeShinyCharm = true;
+		setup.grantItem('item_fake_shiny_charm', 1);
 	}
 	if (recipe.rewardGlassesUpgrade) {
 		var add = Math.min(20, 100 - v.glassesMax);
@@ -11223,6 +11411,7 @@ setup.doChapterAction = function (chapterKey, mode) {
 		setup.markChapterExploreDone(chapterKey);
 		setup.trackWeeklyProgress(chapterKey, 'explore', 1);
 		setup.trackExplore(1);
+		setup.bumpShinyPity(chapterKey, 'explore');
 	}
 	roll = random(1, 100);
 	if (roll <= setup.PROB_NONE) {
@@ -11262,7 +11451,7 @@ setup.doChapterAction = function (chapterKey, mode) {
 	pool = setup.chapterPokemon[chapterKey] && setup.chapterPokemon[chapterKey][mode]
 		? setup.chapterPokemon[chapterKey][mode]
 		: null;
-	mon = setup.randomPokemon(pool);
+	mon = setup.randomPokemon(pool, chapterKey, mode);
 	if (!mon) {
 		return { ok: false, msg: '该区域没有其他宝可梦了。' };
 	}
@@ -11324,8 +11513,8 @@ setup.tryCapture = function (ballId) {
 		if (pokedexKey) {
 			v.pokedex[pokedexKey] = 'caught';
 		}
-		if (mon.shiny && v.hasFakeShinyCharm) {
-			v.hasFakeShinyCharm = false;
+		if (mon.shiny && v.fakeShinyCharmActive) {
+			v.fakeShinyCharmActive = false;
 		}
 		v.encounterMon = null;
 		if (ballId === 'jinlinqiu' || ballId === 'chaojiqiu') {
@@ -12301,7 +12490,11 @@ v1.1版本
 &lt;&lt;set $dashiqiu to 0&gt;&gt;//大师球
 &lt;&lt;set $qianshuiqiu to 0&gt;&gt;//潜水球
 &lt;&lt;set $chengzhongqiu to 0&gt;&gt;//承重球
-&lt;&lt;set $hasFakeShinyCharm to false&gt;&gt;//盗版闪耀护符
+&lt;&lt;set $fakeShinyCharmActive to false&gt;&gt;//盗版闪耀护符已启用
+&lt;&lt;set $fossilCaveCellCount to 0&gt;&gt;//洞穴成功探索格数累计（化石保底）
+&lt;&lt;set $pendingCaveFossil to false&gt;&gt;//本次进洞是否待触发化石
+&lt;&lt;set $shinyPity to { ch1: { explore: 0, salvage: 0, cave: 0 }, ch2: { explore: 0, salvage: 0, cave: 0 }, ch3: { explore: 0, salvage: 0, cave: 0 } }&gt;&gt;//异色保底计数
+&lt;&lt;set $exchangeCharmClaimCount to 0&gt;&gt;//兑换页领取护符次数
 &lt;&lt;set $tili to 10&gt;&gt;//当前体力
 &lt;&lt;set $tiliMax to 10&gt;&gt;//体力上限
 &lt;&lt;set $pokedex to {}&gt;&gt;//图鉴 { speciesKey: &quot;seen&quot;|&quot;caught&quot; }，同物种合并、异色单独
@@ -12489,6 +12682,15 @@ v1.1版本
 &lt;div class=&quot;chapter-page-panel&quot;&gt;
 
 &lt;div class=&quot;game-ui-section&quot;&gt;
+&lt;span class=&quot;chapter-page-label&quot;&gt;精灵球&lt;/span&gt;
+&lt;div class=&quot;game-ui-grid&quot;&gt;
+&lt;div class=&quot;game-ui-item-row&quot;&gt;大师球 × &lt;&lt;print $dashiqiu || 0&gt;&gt;&lt;/div&gt;
+&lt;div class=&quot;game-ui-item-row&quot;&gt;潜水球 × &lt;&lt;print $qianshuiqiu || 0&gt;&gt;&lt;/div&gt;
+&lt;div class=&quot;game-ui-item-row&quot;&gt;承重球 × &lt;&lt;print $chengzhongqiu || 0&gt;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;game-ui-section&quot;&gt;
 &lt;span class=&quot;chapter-page-label&quot;&gt;道具背包&lt;/span&gt;
 &lt;&lt;if not setup.hasBagSupplyItems()&gt;&gt;
 &lt;p class=&quot;game-ui-empty&quot;&gt;（空）&lt;/p&gt;
@@ -12502,6 +12704,13 @@ v1.1版本
 &lt;&lt;link &quot;&lt;&lt;print setup.itemDefs[_id].name&gt;&gt; × &lt;&lt;print _count&gt;&gt;（食用 &lt;&lt;if setup.itemDefs[_id].staminaRestore gt 0&gt;&gt;+&lt;&lt;/if&gt;&gt;&lt;&lt;print setup.itemDefs[_id].staminaRestore&gt;&gt; 体力）&quot;&gt;&gt;
 	&lt;&lt;set _eatResult to setup.useConsumable(_id)&gt;&gt;
 	&lt;&lt;run Dialog.setup(&quot;食用&quot;, &quot;setup-dialog&quot;); Dialog.wiki(_eatResult.msg); Dialog.open();&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;elseif _id === &quot;item_fake_shiny_charm&quot;&gt;&gt;
+&lt;div class=&quot;game-ui-item-row&quot;&gt;
+&lt;&lt;link &quot;盗版闪耀护符 × &lt;&lt;print _count&gt;&gt;（使用）&quot;&gt;&gt;
+	&lt;&lt;set _charmResult to setup.useFakeShinyCharm()&gt;&gt;
+	&lt;&lt;run Dialog.setup(&quot;盗版闪耀护符&quot;, &quot;setup-dialog&quot;); Dialog.wiki(_charmResult.msg); Dialog.open();&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
 &lt;&lt;elseif setup.isShellItem(_id)&gt;&gt;
@@ -12963,6 +13172,29 @@ v1.1版本
 &lt;&lt;/capture&gt;&gt;
 &lt;&lt;/for&gt;&gt;
 &lt;/div&gt;
+
+&lt;&lt;if setup.showCharmExchangeSection()&gt;&gt;
+&lt;span class=&quot;exchange-section-label&quot;&gt;盗版闪耀护符&lt;/span&gt;
+&lt;&lt;set _charmExState to setup.getCharmExchangeState()&gt;&gt;
+&lt;div class=&quot;exchange-ach-grid&quot;&gt;
+&lt;&lt;if _charmExState.ok&gt;&gt;
+&lt;div class=&quot;exchange-ach-cell has-cost&quot;&gt;
+&lt;&lt;link &quot;兑换盗版闪耀护符&quot;&gt;&gt;
+	&lt;&lt;set $pendingExchangeName to &quot;兑换盗版闪耀护符&quot;&gt;&gt;
+	&lt;&lt;set $pendingExchangeCredits to 0&gt;&gt;
+	&lt;&lt;set $pendingExchangeKind to &quot;charm&quot;&gt;&gt;
+	&lt;&lt;set $pendingExchangeId to &quot;charm_fake_shiny&quot;&gt;&gt;
+	&lt;&lt;goto &quot;学分商店兑换确认&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;span class=&quot;chapter-action-cost&quot;&gt;已领 &lt;&lt;print _charmExState.claimed&gt;&gt;/&lt;&lt;print _charmExState.limit&gt;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;&lt;else&gt;&gt;
+&lt;div class=&quot;exchange-ach-cell has-cost is-disabled&quot;&gt;
+&lt;span class=&quot;exchange-ach-static&quot;&gt;兑换盗版闪耀护符（&lt;&lt;print _charmExState.claimed&gt;&gt;/&lt;&lt;print _charmExState.limit || 0&gt;&gt;）&lt;/span&gt;
+&lt;/div&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;/if&gt;&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -12982,10 +13214,16 @@ v1.1版本
 &lt;p class=&quot;chapter-page-text&quot;&gt;请确认：你已达成上述成就数量条件？&lt;/p&gt;
 &lt;&lt;elseif $pendingExchangeKind === &quot;badge&quot;&gt;&gt;
 &lt;p class=&quot;chapter-page-text&quot;&gt;请确认：你已打卡并且找官号兑换过徽章？&lt;/p&gt;
+&lt;&lt;elseif $pendingExchangeKind === &quot;charm&quot;&gt;&gt;
+&lt;p class=&quot;chapter-page-text&quot;&gt;请确认领取盗版闪耀护符。不消耗学分。&lt;/p&gt;
 &lt;&lt;else&gt;&gt;
 &lt;p class=&quot;chapter-page-text&quot;&gt;请确认：你已完成上述打卡兑换条件？&lt;/p&gt;
 &lt;&lt;/if&gt;&gt;
+&lt;&lt;if $pendingExchangeKind === &quot;charm&quot;&gt;&gt;
+&lt;p class=&quot;chapter-page-text&quot;&gt;确认后将获得盗版闪耀护符 × 1。&lt;/p&gt;
+&lt;&lt;else&gt;&gt;
 &lt;p class=&quot;chapter-page-text&quot;&gt;确认后将获得 &lt;strong&gt;&lt;&lt;print $pendingExchangeCredits&gt;&gt;&lt;/strong&gt; 学分。&lt;/p&gt;
+&lt;&lt;/if&gt;&gt;
 &lt;/div&gt;
 
 &lt;ul class=&quot;chapter-action-list&quot;&gt;
@@ -13645,6 +13883,7 @@ v1.1版本
 &lt;&lt;goto &quot;章节行动执行&quot;&gt;&gt;</tw-passagedata><tw-passagedata pid="37" name="第二章下洞穴" tags="" position="2250,275" size="100,100">&lt;&lt;set $chapterKey to &quot;ch2&quot;&gt;&gt;
 &lt;&lt;set $chapterHub to &quot;第二章&quot;&gt;&gt;
 &lt;&lt;set $actionMode to &quot;cave&quot;&gt;&gt;
+&lt;&lt;run setup.onCaveEntry(&quot;ch2&quot;)&gt;&gt;
 &lt;&lt;set $inCaveGrid to true&gt;&gt;
 &lt;&lt;set $caveGridResult to null&gt;&gt;
 &lt;&lt;goto &quot;洞穴格子探索&quot;&gt;&gt;</tw-passagedata><tw-passagedata pid="38" name="第三章" tags="" position="2875,150" size="100,100">&lt;&lt;set _enterCheck to setup.canEnterChapterPassage(&quot;第三章&quot;)&gt;&gt;
